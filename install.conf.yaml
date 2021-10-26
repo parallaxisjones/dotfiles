@@ -2,5 +2,9 @@
 
 - link:
     ~/.zshrc: zshrc
-
+    ~/.config/nvim:
+      create: true
+      glob: true
+      path: config/nvim/*
+      relink: true
 
