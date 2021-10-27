@@ -1,0 +1,2 @@
+[registries]
+dsco-cargo = { index = "https://dl.cloudsmith.io/basic/dsco/cargo/cargo/index.git" }

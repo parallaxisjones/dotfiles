@@ -6,3 +6,15 @@
       create: true
       path: nvim/init.vim
       relink: true
+    ~/.cargo/config:
+      create: true
+      path: cargo/config
+      relink: true
+    ~/.cargo/credentials:
+      create: true
+      path: cargo/credentials
+      relink: true
+    ~/.git-credentials:
+      create: true
+      path: .git-credentials
+      relink: true
