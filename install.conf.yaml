@@ -18,3 +18,11 @@
       create: true
       path: .git-credentials
       relink: true
+    ~/.aws/credentials:
+      create: true
+      path: aws/credentials
+      relink: true
+    ~/.aws/config:
+      create: true
+      path: aws/config
+      relink: true

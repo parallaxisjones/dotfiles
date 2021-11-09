@@ -1,4 +1,6 @@
 call plug#begin('~/.vim/plugged')
+" git fugitive
+Plug 'tpope/vim-fugitive'
 " treesitter
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 " Collection of common configurations for the Nvim LSP client
@@ -33,11 +35,28 @@ Plug 'danilo-augusto/vim-afterglow'
 " org mode
 Plug 'kristijanhusak/orgmode.nvim'
 
+"nerdtree
+Plug 'preservim/nerdtree'
+
+"nerdcommenter
+Plug 'preservim/nerdcommenter'
+
+" tabular plugin is used to format tables
+Plug 'godlygeek/tabular'
+" JSON front matter highlight plugin
+Plug 'elzr/vim-json'
+Plug 'plasticboy/vim-markdown'
+
+
 call plug#end()
+
+" this is needed for nerdcommenter
+" https://github.com/preservim/nerdcommenter
+filetype plugin on
 
 colorscheme afterglow
 
-let mapleader = "\<Space>"
+let mapleader="\<space>"
 " Set completeopt to have a better completion experience
 " :help completeopt
 " menuone: popup even when there's only one match
@@ -47,6 +66,11 @@ set completeopt=menuone,noinsert,noselect
 
 " Avoid showing extra messages when using completion
 set shortmess+=c
+
+
+" Numberline settings
+set number
+set relativenumber
 
 " Configure LSP through rust-tools.nvim plugin.
 " rust-tools will configure and enable certain LSP features for us.
@@ -64,7 +88,7 @@ local opts = {
             use_telescope = true
         },
         inlay_hints = {
-            show_parameter_hints = false,
+            show_parameter_hints = true,
             parameter_hints_prefix = "",
             other_hints_prefix = "",
         },
@@ -139,13 +163,17 @@ cmp.setup({
     { name = 'vsnip' },
     { name = 'path' },
     { name = 'buffer' },
+    { name = 'orgmode' },
   },
 })
 
 
 local orgmode = require('orgmode').setup({
-  org_agenda_files = {'~/OneDrive - Commerce Technologies, Inc/**/*', '~/chub/**/*'},
-  org_default_notes_file = '~/chub/sla-service/docs/index.md',
+  org_agenda_files = {'~/Dropbox/orgfiles/**/*'},
+  org_default_notes_file = '~/Dropbox/orgfiles/chub.org',
+  org_agenda_templates = { 
+	  j = { description = 'Journal', template = '\n*** %<%Y-%m-%d> %<%A>\n**** %U\n\n%?', target = '~/Dropbox/orgfiles/chub.org' }
+	  }
 })
 EOF
 
@@ -155,10 +183,44 @@ set signcolumn=yes
 
 " Set updatetime for CursorHold
 " 300ms of no cursor movement to trigger CursorHold
-set updatetime=300
+set updatetime=500
 " Show diagnostic popup on cursor hover
 autocmd CursorHold * lua vim.lsp.diagnostic.show_line_diagnostics()
 
 " Goto previous/next diagnostic warning/error
 nnoremap <silent> g[ <cmd>lua vim.lsp.diagnostic.goto_prev()<CR>
 nnoremap <silent> g] <cmd>lua vim.lsp.diagnostic.goto_next()<CR>
+
+" Telescope lua mappings
+nnoremap <leader>ff <cmd>lua require('telescope.builtin').find_files()<cr>
+nnoremap <leader>fg <cmd>lua require('telescope.builtin').live_grep()<cr>
+nnoremap <leader>fb <cmd>lua require('telescope.builtin').buffers()<cr>
+nnoremap <leader>fh <cmd>lua require('telescope.builtin').help_tags()<cr>
+nnoremap <leader>frr <cmd>:RustRunnables<cr>
+
+"quickly edit/reload nvim config
+nmap <silent> <leader>ev :e $MYVIMRC<CR>
+nmap <silent> <leader>sv :so $MYVIMRC<CR>
+
+" nerdTree controls
+nnoremap <leader>n :NERDTreeFocus<CR>
+nnoremap <C-n> :NERDTree<CR>
+nnoremap <C-t> :NERDTreeToggle<CR>
+nnoremap <C-f> :NERDTreeFind<CR>
+
+"" vim-markdown config 
+
+" disable header folding
+let g:vim_markdown_folding_disabled = 1
+
+" do not use conceal feature, the implementation is not so good
+let g:vim_markdown_conceal = 0
+
+" disable math tex conceal feature
+let g:tex_conceal = ""
+let g:vim_markdown_math = 1
+
+" support front matter of various format
+let g:vim_markdown_frontmatter = 1  " for YAML format
+let g:vim_markdown_toml_frontmatter = 1  " for TOML format
+let g:vim_markdown_json_frontmatter = 1  " for JSON format
