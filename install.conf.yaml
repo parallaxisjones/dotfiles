@@ -2,9 +2,9 @@
 
 - link:
     ~/.zshrc: zshrc
-    ~/.config/nvim/init.vim:
+    ~/.config/nvim:
       create: true
-      path: nvim/init.vim
+      path: nvim
       relink: true
     ~/.cargo/config:
       create: true
