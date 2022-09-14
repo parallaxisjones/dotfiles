@@ -1,3 +1,12 @@
 [default]
-region=us-east-2
-output=json
+region = us-east-1
+output = json
+
+[orderstream-aws-observer]
+output = json
+region = us-east-1
+
+[dsco-aws-poweruser]
+output = json
+region = us-east-1
+

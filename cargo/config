@@ -1,2 +1,5 @@
 [registries]
 dsco-cargo = { index = "https://dl.cloudsmith.io/basic/dsco/cargo/cargo/index.git" }
+
+[build]
+rustc-wrapper = ".cargo/bin/sccache"
