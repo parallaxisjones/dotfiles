@@ -1,6 +1,14 @@
 - clean: ['~']
 
 - link:
+    ~/.tmux.conf:
+      create: true
+      path: ./.tmux.conf
+      relink: true
+    ~/.emacs.d:
+      create: true
+      path: emacs.d
+      relink: true
     ~/.zshrc: zshrc
     ~/.config/nvim:
       create: true

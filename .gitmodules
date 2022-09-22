@@ -5,3 +5,12 @@
 [submodule "nvim"]
 	path = nvim
 	url = git@github.com:parallaxisjones/neovim-lua.git
+[submodule "zsh/custom/zsh-autosuggestions"]
+	path = zsh/custom/zsh-autosuggestions
+	url = https://github.com/zsh-users/zsh-autosuggestions
+[submodule "zsh/custom/plugins/zsh-autosuggestions"]
+	path = zsh/custom/plugins/zsh-autosuggestions
+	url = https://github.com/zsh-users/zsh-autosuggestions
+[submodule "zsh/custom/plugins/zsh-autocomplete"]
+	path = zsh/custom/plugins/zsh-autocomplete
+	url = https://github.com/marlonrichert/zsh-autocomplete.git
