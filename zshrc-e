@@ -10,5 +10,3 @@ eval $(thefuck --alias)
 # Created by `pipx` on 2023-07-08 02:07:41
 export PATH="$PATH:/Users/pkearfott/.local/bin"
 export PATH="/usr/local/sbin:$PATH"
-
-[ -f "/Users/pkearfott/.ghcup/env" ] && source "/Users/pkearfott/.ghcup/env" # ghcup-env

@@ -1,12 +1,61 @@
 [default]
-region = us-east-1
-output = json
+output=json
+region=us-east-1
+azure_tenant_id=6fe48ad2-8b7b-483a-8f25-28fe1a030a74
+azure_app_id_uri=2e711ed1-05e0-42a7-af5c-542d70145e31
+azure_default_username=pjones@commercehub.com
+azure_default_role_arn=
+azure_default_duration_hours=1
+azure_default_remember_me=true
 
 [orderstream-aws-observer]
-output = json
-region = us-east-1
+output=json
+region=us-east-1
 
 [dsco-aws-poweruser]
-output = json
-region = us-east-1
+output=json
+region=us-east-1
 
+[prod-aws-pmc]
+output=json
+region=us-east-1
+
+[nonprod-aws-ucr]
+output=json
+region=us-east-1
+
+[prod-aws-ucr]
+output=json
+region=us-east-1
+
+[orderstreamnp-aws-administrator]
+output=json
+region=us-east-1
+
+[nonprod-aws-pmc]
+output=json
+region=us-east-1
+
+[insights-aws-administrator]
+output=json
+region=us-east-1
+
+[insightsnp-aws-observer]
+output=json
+region=us-east-1
+
+[insights-aws-observer]
+output=json
+region=us-east-1
+
+[insightsnp-aws-administrator]
+output=json
+region=us-east-1
+
+[insightsnp-aws-poweruser]
+output=json
+region=us-east-1
+
+[insights-aws-poweruser]
+output=json
+region=us-east-1
