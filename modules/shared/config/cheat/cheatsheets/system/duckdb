@@ -1,0 +1,20 @@
+# DuckDB Cheat Sheet
+
+# Start & Connect
+duckdb                    # launch REPL (in-memory)
+duckdb my.db              # open or create file-based DB
+
+# Run Queries / Scripts
+SELECT * FROM table;      # ad-hoc query
+.read script.sql          # execute SQL file
+
+# Import / Export CSV
+COPY table TO 'out.csv' (HEADER, DELIMITER ',');
+COPY table FROM 'in.csv' (HEADER, DELIMITER ',');
+
+# Schema & Metadata
+SHOW TABLES;              # list tables
+DESCRIBE table;           # show columns
+
+# Views
+CREATE VIEW v AS SELECT …;

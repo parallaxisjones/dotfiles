@@ -1,0 +1,19 @@
+# Buildah Cheat Sheet
+
+# Container Creation
+buildah from image:tag           # start new working container
+ctr=$(buildah from image:tag)
+
+# Build / Configure
+buildah run $ctr -- sh -c "…"     # run commands in container
+buildah config --env KEY=VAL $ctr # set metadata
+
+# Commit & Push
+buildah commit $ctr newimage:tag               # save as image
+buildah push newimage:tag docker://registry/repo
+
+# Listing & Cleanup
+buildah images                   # list images
+buildah containers               # list containers
+buildah rm $ctr                  # remove container
+buildah bud -t name:tag .        # build from Containerfile

@@ -1,0 +1,18 @@
+# SQLite Cheat Sheet
+
+# Open & Quit
+sqlite3 my.db             # open DB
+.exit                     # quit
+
+# Meta Commands (dot-commands)
+.tables                   # list tables
+.schema [table]           # show schema
+.mode csv                 # set output format
+.output out.csv           # redirect query output
+
+# Run Queries & Scripts
+SELECT * FROM table;      # execute SQL
+.read script.sql          # run SQL file
+
+# CSV Import
+.import in.csv table      # import CSV into table
