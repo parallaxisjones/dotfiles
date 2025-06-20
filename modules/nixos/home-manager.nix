@@ -39,7 +39,7 @@ in
     username = "${user}";
     homeDirectory = "/home/${user}";
     packages = pkgs.callPackage ./packages.nix {};
-    file = shared-files // import ./files.nix { inherit user pkgs; };
+    file = shared-files // import ./files.nix { inherit user pkgs lib; };
     stateVersion = "21.05";
   };
   # imports = [ wallpaper-rotation ];
