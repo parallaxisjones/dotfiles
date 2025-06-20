@@ -42,6 +42,9 @@ in
     packages = pkgs.callPackage ./packages.nix {};
     file = sharedFiles // additionalFiles;
     stateVersion = "21.05";
+    activation.ensureCheatPersonalDir = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      mkdir -p "$HOME/.config/cheat/cheatsheets/personal"
+    '';
   };
   # imports = [ wallpaper-rotation ];
   # Use a dark theme

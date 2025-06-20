@@ -1,16 +1,34 @@
 { pkgs, config, lib, ... }:
 
 let
-
+  # Path to local system cheat sheets (committed in dotfiles)
   cheatsheetPath = ./config/cheat/cheatsheets/system;
   cheatsheetFiles = builtins.readDir cheatsheetPath;
-  mkCheatsheet = name: type: lib.nameValuePair ".config/cheat/cheatsheets/system/${name}" {
-    source = cheatsheetPath + "/${name}";
+
+  # Map individual system cheatsheets into home.file entries
+  mkCheatsheet = name: type:
+    lib.nameValuePair ".config/cheat/cheatsheets/system/${name}" {
+      source = cheatsheetPath + "/${name}";
+    };
+
+  systemCheatsheets = lib.mapAttrs' mkCheatsheet
+    (lib.filterAttrs (n: v: v == "regular") cheatsheetFiles);
+
+  # Pull in community cheat sheets as a full directory
+  communityCheatsheets = {
+    ".config/cheat/cheatsheets/community" = {
+      source = builtins.fetchGit {
+        url = "https://github.com/cheat/cheatsheets.git";
+        ref = "master";
+        # Optionally pin to a commit:
+        rev = "36bdb99dcfadde210503d8c2dcf94b34ee950e1d";
+      };
+      recursive = true;
+      force = true;
+    };
   };
-  cheatsheets = lib.mapAttrs' mkCheatsheet (lib.filterAttrs (n: v: v == "regular") cheatsheetFiles);
 
 in
-
 {
   ".ssh/id_github.pub" = {
     source = ./config/id_github.pub;
@@ -32,4 +50,8 @@ in
   ".config/cheat/conf.yml" = {
     source = ./config/cheat_conf.yml;
   };
-} // cheatsheets
+}
+//
+systemCheatsheets
+//
+communityCheatsheets
