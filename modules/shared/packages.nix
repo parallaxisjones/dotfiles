@@ -35,7 +35,7 @@ with pkgs; [
   rust-analyzer
   rustfmt
   libiconv
-
+  htmlq
   # BEAM
   gleam
   elixir
