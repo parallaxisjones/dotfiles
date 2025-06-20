@@ -4,7 +4,8 @@ let
   user = "parallaxis";
   xdg_configHome  = "/home/${user}/.config";
   shared-programs = import ../shared/home-manager.nix { inherit config pkgs lib; };
-  shared-files = import ../shared/files.nix { inherit config pkgs; };
+  sharedFiles     = import ../shared/files.nix { inherit config pkgs lib; };
+  additionalFiles = import ./files.nix { inherit user config pkgs; };
   # wallpaper-rotation = import ../gnome/random-wallpaper.nix {
   #   inherit config pkgs lib;
   # };
@@ -39,7 +40,7 @@ in
     username = "${user}";
     homeDirectory = "/home/${user}";
     packages = pkgs.callPackage ./packages.nix {};
-    file = shared-files // import ./files.nix { inherit user pkgs lib; };
+    file = sharedFiles // additionalFiles;
     stateVersion = "21.05";
   };
   # imports = [ wallpaper-rotation ];

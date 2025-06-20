@@ -8,7 +8,7 @@ shared-packages ++ [
   _1password-gui
   yubikey-agent
   keepassxc
-
+  barrier
   # App and package management
   appimage-run
   gnumake
