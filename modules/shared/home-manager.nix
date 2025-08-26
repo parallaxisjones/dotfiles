@@ -280,7 +280,7 @@ let name = "Parker Jones";
       };
       # Parallaxis key for NixOS
       "nixos" = {
-        hostname = "nixos.local";
+        hostname = "nixos.attlocal.net";
         user = "parallaxis";
         identityFile = [
           (lib.mkIf pkgs.stdenv.hostPlatform.isLinux
@@ -298,7 +298,7 @@ let name = "Parker Jones";
         };
       };
       "nixos.local" = {
-        hostname = "nixos.local";
+        hostname = "nixos.attlocal.net";
         user = "parallaxis";
         identityFile = [
           (lib.mkIf pkgs.stdenv.hostPlatform.isLinux
