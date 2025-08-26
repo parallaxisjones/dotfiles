@@ -41,6 +41,7 @@ with pkgs; [
   elixir
   erlang
   zig
+  docker-compose
   # Encryption and security tools
   _1password-cli
   age

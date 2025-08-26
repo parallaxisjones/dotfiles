@@ -319,7 +319,6 @@ let name = "Parker Jones";
     historyLimit = 50000;
     extraConfig = ''
       # Default shell
-      set-option -g default-shell /run/current-system/sw/bin/zsh
 
       # Remove Vim mode delays
       set -g focus-events on
