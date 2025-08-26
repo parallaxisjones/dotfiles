@@ -266,9 +266,6 @@ let name = "Parker Jones";
         "/Users/${workUser}/.ssh/config_external"
       )
     ];
-    extraConfig = ''
-      IgnoreUnknown UseKeychain
-    '';
     matchBlocks = {
       "github.com" = {
         identitiesOnly = true;
@@ -296,8 +293,6 @@ let name = "Parker Jones";
         identitiesOnly = true;
         extraOptions = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
           AddKeysToAgent = "yes";
-          IgnoreUnknown  = "UseKeychain";
-          UseKeychain    = "yes";
         };
       };
       "nixos.local" = {
@@ -314,8 +309,6 @@ let name = "Parker Jones";
         identitiesOnly = true;
         extraOptions = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
           AddKeysToAgent = "yes";
-          IgnoreUnknown  = "UseKeychain";
-          UseKeychain    = "yes";
         };
       };
     };
