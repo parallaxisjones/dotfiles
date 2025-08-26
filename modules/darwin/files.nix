@@ -5,10 +5,10 @@ let
   xdg_dataHome   = "${config.users.users.${user}.home}/.local/share";
   xdg_stateHome  = "${config.users.users.${user}.home}/.local/state";
 
-  home = config.users.users.${user}.home;
+  inherit (config.users.users.${user}) home;
   mcpServers = import ../shared/mcp-servers.nix { inherit home; };
 in
 {
   # Other file definitions can go here...
-  "${xdg_configHome}/mcphub/servers.json".text = builtins.toJSON { mcpServers = mcpServers; };
+  "${xdg_configHome}/mcphub/servers.json".text = builtins.toJSON { inherit mcpServers; };
 }

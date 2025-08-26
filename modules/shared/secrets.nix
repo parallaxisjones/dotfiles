@@ -24,6 +24,6 @@ age = agenix.lib.secrets (rec {
 
   ageFiles = {
     # openai-key.age should be decrypted by *both* labels
-    "openai-key.age".publicKeys = [ pjones parallaxis ];
+    "openai-key.age".publicKeys = [ users.pjones users.parallaxis ];
   };
 });
