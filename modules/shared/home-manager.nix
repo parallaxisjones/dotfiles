@@ -278,6 +278,41 @@ let name = "Parker Jones";
           )
         ];
       };
+      # Parallaxis key for NixOS
+      "nixos" = {
+        hostname = "nixos.local";
+        user = "parallaxis";
+        identityFile = [
+          (lib.mkIf pkgs.stdenv.hostPlatform.isLinux
+            "/home/${user}/.ssh/parallaxis"
+          )
+          (lib.mkIf pkgs.stdenv.hostPlatform.isDarwin
+            "/Users/${workUser}/.ssh/parallaxis"
+          )
+        ];
+        identitiesOnly = true;
+        extraOptions = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
+          AddKeysToAgent = "yes";
+          UseKeychain   = "yes";
+        };
+      };
+      "nixos.local" = {
+        hostname = "nixos.local";
+        user = "parallaxis";
+        identityFile = [
+          (lib.mkIf pkgs.stdenv.hostPlatform.isLinux
+            "/home/${user}/.ssh/parallaxis"
+          )
+          (lib.mkIf pkgs.stdenv.hostPlatform.isDarwin
+            "/Users/${workUser}/.ssh/parallaxis"
+          )
+        ];
+        identitiesOnly = true;
+        extraOptions = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
+          AddKeysToAgent = "yes";
+          UseKeychain   = "yes";
+        };
+      };
     };
   };
 
