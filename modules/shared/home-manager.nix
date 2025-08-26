@@ -293,7 +293,8 @@ let name = "Parker Jones";
         identitiesOnly = true;
         extraOptions = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
           AddKeysToAgent = "yes";
-          UseKeychain   = "yes";
+          IgnoreUnknown  = "UseKeychain";
+          UseKeychain    = "yes";
         };
       };
       "nixos.local" = {
@@ -310,7 +311,8 @@ let name = "Parker Jones";
         identitiesOnly = true;
         extraOptions = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
           AddKeysToAgent = "yes";
-          UseKeychain   = "yes";
+          IgnoreUnknown  = "UseKeychain";
+          UseKeychain    = "yes";
         };
       };
     };
