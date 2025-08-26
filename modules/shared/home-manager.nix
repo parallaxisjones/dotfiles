@@ -266,12 +266,6 @@ let name = "Parker Jones";
         "/Users/${workUser}/.ssh/config_external"
       )
     ];
-    knownHosts = {
-      nixos = {
-        hostNames = [ "nixos" "nixos.attlocal.net" ];
-        publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIUWX7kVXQnsjU2a2sHv7JvEaqP6FxF0OIgAe2PbFR5B";
-      };
-    };
     matchBlocks = {
       "github.com" = {
         identitiesOnly = true;
