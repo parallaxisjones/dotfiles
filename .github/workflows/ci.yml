@@ -23,10 +23,38 @@ jobs:
         run: |
           nix run --extra-experimental-features 'nix-command flakes' nixpkgs#statix -- check .
 
-      - name: Deadnix static analysis
-        continue-on-error: true
+      - name: Deadnix static analysis (verbose, capture report)
         run: |
-          nix run --extra-experimental-features 'nix-command flakes' nixpkgs#deadnix -- --fail --quiet .
+          set -euo pipefail
+          echo "Running deadnix (will fail if issues are found)..."
+          # Run without --quiet so warnings are visible; capture exit status
+          nix run --extra-experimental-features 'nix-command flakes' nixpkgs#deadnix -- --fail . | tee deadnix-report.txt
+          echo "DEADNIX_STATUS=${PIPESTATUS[0]}" >> $GITHUB_ENV
+          # If failures, add a readable summary
+          if [ "${PIPESTATUS[0]}" -ne 0 ]; then
+            {
+              echo "## Deadnix found issues"
+              echo
+              echo "Deadnix reported the following (first 400 lines):"
+              echo
+              echo '```'
+              sed -n '1,400p' deadnix-report.txt
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload Deadnix report (on failure)
+        if: env.DEADNIX_STATUS != '0'
+        uses: actions/upload-artifact@v4
+        with:
+          name: deadnix-report
+          path: deadnix-report.txt
+
+      - name: Fail if Deadnix found issues
+        if: env.DEADNIX_STATUS != '0'
+        run: |
+          echo "Deadnix found issues. See summary and attached report." >&2
+          exit 1
 
       - name: Flake checks
         run: |
