@@ -76,10 +76,30 @@ in
 
   # Use Zsh as the default shell
   programs.zsh.enable = true;
-
+  
   # Darwin-specific settings
-  system.stateVersion  = 4;
-  system.primaryUser   = "pjones";
+  system = {
+    stateVersion = 4;
+    primaryUser  = "pjones";
+    defaults = {
+      dock = {
+        autohide                 = true;
+        orientation              = "bottom";
+        show-process-indicators  = false;
+        show-recents             = false;
+        static-only              = true;
+      };
+      finder = {
+        AppleShowAllExtensions          = true;
+        ShowPathbar                     = true;
+        FXEnableExtensionChangeWarning  = false;
+      };
+      NSGlobalDomain = {
+        AppleKeyboardUIMode      = 3;
+        "com.apple.keyboard.fnState" = true;
+      };
+    };
+  };
   nixpkgs.hostPlatform = "aarch64-darwin";
   nixpkgs.config.allowUnfree = true;
 
@@ -90,23 +110,5 @@ in
     shell        = pkgs.zsh;
   };
 
-  # macOS defaults for Finder and Dock
-  system.defaults = {
-    dock = {
-      autohide                 = true;
-      orientation              = "bottom";
-      show-process-indicators  = false;
-      show-recents             = false;
-      static-only              = true;
-    };
-    finder = {
-      AppleShowAllExtensions          = true;
-      ShowPathbar                     = true;
-      FXEnableExtensionChangeWarning  = false;
-    };
-    NSGlobalDomain = {
-      AppleKeyboardUIMode      = 3;
-      "com.apple.keyboard.fnState" = true;
-    };
-  };
+  # macOS defaults are defined above in system.defaults
 }
