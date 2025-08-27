@@ -1,8 +1,6 @@
 { config, ... }:
 
-let
-  # emacsOverlaySha256 was unused; removing cleans up dead code
-in
+  
 {
 
   nixpkgs = {
