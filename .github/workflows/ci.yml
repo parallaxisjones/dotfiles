@@ -48,12 +48,11 @@ jobs:
       contents: write
       pull-requests: write
     steps:
-      - name: Enable auto-merge
-        uses: pascalgn/automerge-action@v0.15.6
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          MERGE_LABELS: automerge
-          MERGE_METHOD: squash
-          MERGE_COMMIT_MESSAGE: pull-request-title
+      - name: Enable GitHub native auto-merge
+        uses: peter-evans/enable-pull-request-automerge@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          pull-request-number: ${{ github.event.pull_request.number }}
+          merge-method: squash
 
 
