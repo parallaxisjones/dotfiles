@@ -107,4 +107,5 @@ with pkgs; [
   eza
   myPython
   lua-language-server
+  aider-chat
 ]
