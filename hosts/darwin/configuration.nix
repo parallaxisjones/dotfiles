@@ -67,6 +67,27 @@ in
     mcp-hub.packages.${system}.default
   ];
 
+  # Ensure ~/.ssh/known_hosts is a writable regular file, not a symlink, to avoid SSH known_hosts update issues
+  system.activationScripts.fixKnownHosts = {
+    deps = [ ];
+    text = ''
+      USER_HOME="/Users/pjones"
+      KNOWN_HOSTS="$USER_HOME/.ssh/known_hosts"
+      mkdir -p "$USER_HOME/.ssh"
+      if [ -L "$KNOWN_HOSTS" ]; then
+        echo "Replacing symlinked known_hosts with a regular file"
+        rm -f "$KNOWN_HOSTS"
+        touch "$KNOWN_HOSTS"
+        chown pjones:staff "$KNOWN_HOSTS"
+        chmod 600 "$KNOWN_HOSTS"
+      elif [ ! -e "$KNOWN_HOSTS" ]; then
+        touch "$KNOWN_HOSTS"
+        chown pjones:staff "$KNOWN_HOSTS"
+        chmod 600 "$KNOWN_HOSTS"
+      fi
+    '';
+  };
+
   # Uncomment to auto-upgrade the nix-daemon, etc.
   # services.nix-daemon.enable = true;
   # services.karabiner-elements.enable = true;

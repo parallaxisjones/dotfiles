@@ -30,7 +30,7 @@ let
 
 in
 {
-  ".ssh/known_hosts" = {
+  ".ssh/known_hosts_hm" = {
     force = true;
     text = ''
 nixos.attlocal.net ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIUWX7kVXQnsjU2a2sHv7JvEaqP6FxF0OIgAe2PbFR5B

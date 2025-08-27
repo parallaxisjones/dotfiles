@@ -258,6 +258,10 @@ let name = "Parker Jones";
 
   ssh = {
     enable = true;
+    extraConfig = ''
+      # Prefer the regular user-writable file first, then the HM-managed static file
+      UserKnownHostsFile ~/.ssh/known_hosts ~/.ssh/known_hosts_hm
+    '';
     includes = [
       (lib.mkIf pkgs.stdenv.hostPlatform.isLinux
         "/home/${user}/.ssh/config_external"

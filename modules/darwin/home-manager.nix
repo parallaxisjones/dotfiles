@@ -36,6 +36,10 @@ in
         file = lib.mkMerge [
           sharedFiles
           additionalFiles
+          # Ensure ~/.ssh exists and provide a keep file so the directory is created
+          {
+            ".ssh/.keep".text = "";
+          }
           # ──────────────────────────────────────────────────────────────────────
           # 1) Ensure ~/.cache/nvim/avante/clipboard exists
           {
@@ -71,6 +75,15 @@ in
       # ─────────────────────────────────────────────────────────────────────────
       programs = {} // import ../shared/home-manager.nix { inherit config pkgs lib; };
       manual.manpages.enable = false;
+
+      # Ensure a writable known_hosts exists for the user (not a symlink)
+      home.activation.ensureKnownHosts = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
+        mkdir -p "$HOME/.ssh"
+        if [ ! -e "$HOME/.ssh/known_hosts" ]; then
+          touch "$HOME/.ssh/known_hosts"
+          chmod 600 "$HOME/.ssh/known_hosts"
+        fi
+      '';
     };
   };
 
