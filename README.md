@@ -20,6 +20,7 @@ The repository is organized as follows:
 - `modules/`: Contains shared and reusable configuration modules for packages, shell settings, etc.
 - `overlays/`: Contains custom package definitions or modifications to `nixpkgs`.
 - `apps/`: Contains configurations for various applications.
+- `docs/CURSOR.md`: Guide for using this repo effectively with the Cursor coding agent.
 
 ## Usage
 
