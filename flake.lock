@@ -201,11 +201,11 @@
     "homebrew-cask": {
       "flake": false,
       "locked": {
-        "lastModified": 1756326097,
-        "narHash": "sha256-KjjOy+bm6qnU3cpcf5vJKCBkJlVDOYXa0Vd5MF+L3JA=",
+        "lastModified": 1756331078,
+        "narHash": "sha256-a0SRQcuqHKS8b/RRyMoEdE8CGhAGMJY0Um7bsW6iYl8=",
         "owner": "homebrew",
         "repo": "homebrew-cask",
-        "rev": "226ed4625d5ff8d29e9fc2ed6faf260c34848dbe",
+        "rev": "d499ab44248daa960b7399d1767101bd395c31fa",
         "type": "github"
       },
       "original": {
@@ -217,11 +217,11 @@
     "homebrew-core": {
       "flake": false,
       "locked": {
-        "lastModified": 1756329258,
-        "narHash": "sha256-ifOeyHNZ02ZeTOLwRaQAHoRox9PCcs9+x9VZnWnvwD0=",
+        "lastModified": 1756331985,
+        "narHash": "sha256-exuWbkRHpqf7p2is/H6RfaUT6JfAdjNQ1RcIItnIIHQ=",
         "owner": "homebrew",
         "repo": "homebrew-core",
-        "rev": "0bd7ebe0166eb3aeaa8d9b3323110432fd21f29b",
+        "rev": "8fc638ddbceb853cd6c0a473c2da96c0d6944f19",
         "type": "github"
       },
       "original": {
@@ -367,7 +367,7 @@
     "secrets": {
       "flake": false,
       "locked": {
-        "narHash": "sha256-Qd1DiURTxsNHI5qu9buW4rluy1/8BgF+LLnZKKKOD/M=",
+        "narHash": "sha256-71ndX41otrcfHz+a5B4fxTMPj0b08K/jcDBxfVfqgE8=",
         "type": "file",
         "url": "https://git@github.com/parallaxisjones/nix-secrets.git?ref=main"
       },
