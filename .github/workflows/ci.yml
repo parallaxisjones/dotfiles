@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  lint-eval:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+
+      - name: Statix Lint
+        run: |
+          nix run --extra-experimental-features 'nix-command flakes' nixpkgs#statix -- check .
+
+      - name: Deadnix static analysis
+        run: |
+          nix run --extra-experimental-features 'nix-command flakes' nixpkgs#deadnix -- --fail --quiet .
+
+      - name: Flake checks
+        run: |
+          nix --extra-experimental-features 'nix-command flakes' flake check --all-systems
+
+      - name: Evaluate Darwin and NixOS systems
+        run: |
+          set -euo pipefail
+          nix --extra-experimental-features 'nix-command flakes' eval .#darwinConfigurations.aarch64-darwin.system
+          nix --extra-experimental-features 'nix-command flakes' eval .#darwinConfigurations.x86_64-darwin.system
+          nix --extra-experimental-features 'nix-command flakes' eval .#nixosConfigurations.x86_64-linux.config.system.build.toplevel
+          nix --extra-experimental-features 'nix-command flakes' eval .#nixosConfigurations.aarch64-linux.config.system.build.toplevel
+
+  automerge:
+    if: github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'automerge')
+    runs-on: ubuntu-latest
+    needs: [lint-eval]
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Enable auto-merge
+        uses: pascalgn/automerge-action@v0.15.6
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MERGE_LABELS: automerge
+          MERGE_METHOD: squash
+          MERGE_COMMIT_MESSAGE: pull-request-title
+
+
