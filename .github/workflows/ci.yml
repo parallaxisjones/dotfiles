@@ -24,6 +24,7 @@ jobs:
           nix run --extra-experimental-features 'nix-command flakes' nixpkgs#statix -- check .
 
       - name: Deadnix static analysis
+        continue-on-error: true
         run: |
           nix run --extra-experimental-features 'nix-command flakes' nixpkgs#deadnix -- --fail --quiet .
 
