@@ -6,5 +6,6 @@ shared-packages ++ [
   awscli2
   fswatch
   dockutil
+  devenv
   pnpm
 ]

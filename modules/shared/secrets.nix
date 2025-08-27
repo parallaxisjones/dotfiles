@@ -9,21 +9,26 @@ let
   systems = [ "x86_64-linux" "aarch64-darwin" ];
 in
 
-# 3) Wrap the argument to agenix.lib.secrets in `rec { … }` so that
-#    “pjones” and “parallaxis” (the user‐labels) are in scope
-age = agenix.lib.secrets (rec {
+{
+
+# 3) Wrap the argument to agenix.lib.secrets in `rec { ... }` so that
+#    "pjones" and "parallaxis" (the user-labels) are in scope
+age.secrets = agenix.lib.secrets rec {
   inherit systems;
 
   users = {
-    # macOS (“pjones”) can decrypt macOS-only secrets
+    # macOS ("pjones") can decrypt macOS-only secrets
     pjones = { publicKeys = [ pjonesPublicKey ]; };
 
-    # NixOS (“parallaxis”) can decrypt Linux-only secrets
+    # NixOS ("parallaxis") can decrypt Linux-only secrets
     parallaxis = { publicKeys = [ parallaxisPublicKey ]; };
   };
 
   ageFiles = {
-    # openai-key.age should be decrypted by *both* labels
-    "openai-key.age".publicKeys = [ users.pjones users.parallaxis ];
+    # openai-key.age should be decrypted by both labels
+    "openai-key.age" = {
+      publicKeys = [ users.pjones users.parallaxis ];
+    };
   };
-});
+};
+}
