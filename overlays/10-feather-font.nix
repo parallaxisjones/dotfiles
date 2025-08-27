@@ -1,4 +1,4 @@
-self: super: with super; {
+_: super: with super; {
   feather-font = let
     version = "1.0";
     pname = "feather-font";

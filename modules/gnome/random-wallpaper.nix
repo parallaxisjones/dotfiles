@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ pkgs, ... }:
 
 let
   # Build a little CLI tool that picks & sets a random GNOME wallpaper.

@@ -1,4 +1,4 @@
-{ config, pkgs, lib, agenix, ... }:
+{ agenix, ... }:
 
 let
   # 1) Point to your actual .pub files on each machine:

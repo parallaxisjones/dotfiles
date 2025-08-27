@@ -1,11 +1,8 @@
-{ config, pkgs, lib, home-manager, agenix, secrets, ... }:
+{ config, pkgs, lib, home-manager, agenix, ... }:
 
 let
   user            = "pjones";
-  myEmacsLauncher = pkgs.writeScript "emacs-launcher.command" ''
-    #!/bin/sh
-    emacsclient -c -n &
-  '';
+  # myEmacsLauncher was unused; removed to satisfy deadnix
   sharedFiles     = import ../shared/files.nix { inherit config pkgs lib; };
   additionalFiles = import ./files.nix { inherit user config pkgs; };
 in

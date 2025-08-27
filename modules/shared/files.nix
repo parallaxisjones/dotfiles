@@ -1,4 +1,4 @@
-{ pkgs, config, lib, ... }:
+{ lib, ... }:
 
 let
   # Path to local system cheat sheets (committed in dotfiles)
@@ -6,13 +6,13 @@ let
   cheatsheetFiles = builtins.readDir cheatsheetPath;
 
   # Map individual system cheatsheets into home.file entries
-  mkCheatsheet = name: type:
+  mkCheatsheet = name: _:
     lib.nameValuePair ".config/cheat/cheatsheets/system/${name}" {
       source = cheatsheetPath + "/${name}";
     };
 
   systemCheatsheets = lib.mapAttrs' mkCheatsheet
-    (lib.filterAttrs (n: v: v == "regular") cheatsheetFiles);
+    (lib.filterAttrs (_n: v: v == "regular") cheatsheetFiles);
 
   # Pull in community cheat sheets as a full directory
   communityCheatsheets = {

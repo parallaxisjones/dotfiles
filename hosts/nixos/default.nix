@@ -1,4 +1,4 @@
-{ config, inputs, lib, pkgs, agenix, ... }:
+{ pkgs, agenix, ... }:
 
 let user = "parallaxis";
     keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAao6hYRda8Dc88DgWHblVFV/HFCcj6kJuDWq7oqt7Aq" ]; in

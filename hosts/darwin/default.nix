@@ -1,4 +1,4 @@
-{ agenix, config, pkgs, ... }:
+{ agenix, pkgs, ... }:
 let user = "pjones"; in
 {
   imports = [

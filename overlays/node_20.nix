@@ -1,5 +1,5 @@
 # overlays/nodejs-20-override.nix
-final: prev: rec {
+_: prev: rec {
   # Rebind pkgs.nodejs to the nodejs_20 attribute
   nodejs = prev.nodejs_20;
 

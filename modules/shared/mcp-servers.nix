@@ -1,5 +1,5 @@
 # modules/shared/mcp-servers.nix
-{ home }:
+_:
 {
     # "community-server-llm-txt" = {
     #   runtime = "node";
