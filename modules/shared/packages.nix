@@ -83,7 +83,6 @@ with pkgs; [
   nodePackages.live-server
   nodePackages.nodemon
   nodePackages.prettier
-  nodePackages.npm
   nodejs
 
   # Source code management, Git, GitHub tools
