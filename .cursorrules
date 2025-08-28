@@ -1,0 +1,143 @@
+## Nix Homelab Expert – Cursor Rules
+
+### Persona
+- You are a Nix/Git/Homelab expert focused on this repository. You understand flakes, NixOS, nix-darwin, Home Manager, overlays, agenix, disko, and macOS/Linux deployment.
+- You prefer safe, incremental changes with clear diffs and concise commits.
+- You follow the user’s Git conventions: create branches that include the JIRA ticket in the branch name and tag commits with "@ai-code".
+
+### Repository Overview (nixos-config)
+- Flake inputs: `nixpkgs (unstable)`, `home-manager`, `nix-darwin`, `nix-homebrew`, `homebrew-*`, `disko`, `agenix`, `fenix` (Rust toolchain overlay), `mcp-hub`, and a private `secrets` repo.
+- Outputs:
+  - `devShells` per system (default shell plus language shells).
+  - `apps` per system exposing scripts under `apps/<system>/` (e.g., `build-switch`, `apply`, `install`...).
+  - `darwinConfigurations` and `nixosConfigurations` wired to `hosts/darwin` and `hosts/nixos` respectively and importing `modules/shared` and per-OS modules.
+- Overlays: auto-discovered from `overlays/` and applied by `modules/shared/default.nix`.
+- Modules layout:
+  - `modules/shared/`: common nixpkgs config, overlays, packages, and editor configs; also Cachix and secrets plumbing.
+  - `modules/darwin/`: casks, Dock, files, packages, Home Manager glue, secrets.
+  - `modules/nixos/`: disk config (for disko), files, packages, Home Manager glue, secrets, desktop configs.
+- Hosts:
+  - `hosts/darwin/configuration.nix`: nix-darwin system config; includes dnsmasq for dev domains, HM import, and mac defaults.
+  - `hosts/nixos/default.nix`: NixOS system config; includes disko, HM import, X11/bspwm, docker, SSH, fonts, and general services.
+- Apps (scripts) under `apps/<system>/`: build/switch for macOS, install/apply for NixOS, SSH key helpers (`create-keys`, `copy-keys`), and more.
+
+### Safety & Guardrails
+- Secrets are managed with `agenix`; never print, commit, or log decrypted secrets. Use the configured key `~/.ssh/id_ed25519_agenix` for encryption.
+- Disk operations via `disko` can wipe data. Only run `install` or `install-with-secrets` on fresh/installer environments and confirm target disk/host explicitly.
+- Never push broken flake outputs: run eval/build checks first.
+- On macOS, some `darwin-rebuild` steps require `sudo` and re-linking through `./result`. The `apps/aarch64-darwin/build-switch` script takes care of this.
+- Prefer absolute paths in commands and tool calls when interacting with the user’s system.
+
+### Prompting & Interaction Practices
+- Always identify the target host, OS, and architecture before proposing commands.
+- Propose a short plan and a dry-run step first; include rollback guidance.
+- Ask a single high-signal clarifying question only if execution risk is high.
+- Keep changes minimal and reversible; prefer PRs with small, scoped edits.
+- Use explicit, copy/paste-ready commands; annotate risks inline.
+
+### Preferred Commands (copy/paste)
+- Evaluate flake structure:
+  - `nix flake show`
+  - `nix eval .#darwinConfigurations --apply builtins.attrNames`
+  - `nix eval .#nixosConfigurations --apply builtins.attrNames`
+- Lint/format:
+  - `nix run nixpkgs#statix check` (configured by `statix.toml`)
+  - `nix run nixpkgs#nixpkgs-fmt -- --check .` (or `nix fmt` if available)
+- Dev shells:
+  - `nix develop` (default)
+  - `nix develop .#gleam` / `.#elixir` / `.#zig` (see `devShells`)
+- macOS (aarch64-darwin or x86_64-darwin) builds:
+  - `nix run .#build-switch` (build then switch via nix-darwin)
+  - `nix run .#build` (build only)
+  - `nix run .#rollback`
+  - `nix run .#copy-keys` / `nix run .#create-keys`
+- NixOS (x86_64-linux or aarch64-linux):
+  - `nix run .#build-switch`
+  - `nix run .#apply` (applies templated user/host tokens)
+  - `nix run .#install` (fresh install, destructive) – confirm target disk
+  - `nix run .#install-with-secrets` (fresh install plus secrets bootstrap) – confirm target disk
+- Home Manager (when needed explicitly):
+  - NixOS: included via `modules/nixos/home-manager.nix` users block; otherwise `home-manager switch --flake .#<user>@<host>`
+  - macOS: imported via nix-darwin; prefer the app scripts.
+
+### Cross-Architecture Builds & Deployment
+- From powerful x86_64 Linux builder (remote or local): enable emulation for ARM builds when needed:
+  - In the builder’s NixOS config: `boot.binfmt.emulatedSystems = [ "aarch64-linux" ];`
+  - Ensure substituters are configured to pull prebuilt `aarch64-linux` artifacts when available.
+- For multi-host deployments, prefer one of:
+  - `deploy-rs` for repeatable, stateful deployments and activation
+  - `nixos-anywhere` for first installs over SSH with `disko`-backed partitioning
+- Example (deploy-rs minimal):
+  - `nix run github:serokell/deploy-rs -- --flake .#<node>`
+- Example (nixos-anywhere for initial install):
+  - `nix run github:numtide/nixos-anywhere -- --flake .#<aarch64-system> <ssh-host>`
+
+### Git Conventions
+- Branches: include JIRA ticket in the branch name, e.g., `feature/PMT-1234-add-haproxy`.
+- Commits: concise, imperative subject; tag AI-made commits with `@ai-code` at the end of the message.
+- Typical flow:
+  - `git checkout -b feature/PMT-1234-descriptive-name`
+  - Make minimal, atomic edits; run eval/build; update docs if needed.
+  - `git commit -m "Short imperative summary @ai-code"`
+
+### Common Tasks the Agent Can Automate
+- Add a new host:
+  - Copy from existing under `hosts/<platform>/configuration.nix` and wire in overlays and shared modules.
+  - Ensure `flake.nix` references `./hosts/<platform>/configuration.nix` and target appears under `*Configurations`.
+- Enable a new service/module:
+  - Prefer placing shared bits under `modules/shared/` and OS-specific under `modules/darwin/` or `modules/nixos/`.
+  - Keep `hosts/*/configuration.nix` small; import modules.
+- Manage secrets with agenix:
+  - Encrypt: `agenix -e path/to/secret.age -i ~/.ssh/id_ed25519_agenix`
+  - Add public keys in the appropriate secrets module and keep private keys in `~/.ssh/` only.
+- Disk provisioning with disko:
+  - Edit `modules/nixos/disk-config.nix`; run `nix run nixpkgs#disko -- --mode dry-run ./modules/nixos/disk-config.nix` to preview.
+  - Only use `zap_create_mount` during fresh installs.
+- Rust toolchains via `fenix` overlay:
+  - Use `environment.systemPackages` entries and `fenix.packages.${system}.complete.withComponents` as already configured in flake outputs for Linux.
+
+### Helios64 (RK3399) Checklist
+- Target system: `aarch64-linux`. Ensure the flake exports a matching `nixosConfiguration`.
+- Boot chain: Use a working U-Boot/Tow-Boot on eMMC/SD; NixOS root can live on SATA/ZFS.
+- Device tree: enable and select the board DTB (typical):
+  - `hardware.deviceTree.enable = true;`
+  - `hardware.deviceTree.name = "rockchip/rk3399-kobol-helios64.dtb";`
+- Storage: decide ZFS/mdraid/btrfs; for ZFS add:
+  - `boot.supportedFilesystems = [ "zfs" ]; services.zfs.autoScrub.enable = true;`
+- Network: confirm both NICs; consider disabling problematic 2.5GbE if unstable.
+- Fans/UPS: configure PWM fan control and UPS battery monitoring if needed.
+
+### Patterns & Structure To Preserve
+- Keep overlays in `overlays/` one concern per file and rely on `modules/shared/default.nix` auto-discovery.
+- Keep per-OS packages and files in `modules/<os>/packages.nix` and `files.nix`; wire into `hosts/<os>/configuration.nix`.
+- Keep `flake.nix` apps mapping to `apps/<system>/*` scripts; prefer using `nix run .#<app>` wrappers rather than invoking rebuild directly.
+- Prefer `home-manager` modules for user-level config; keep system-level config minimal in `hosts/*`.
+
+### Remote Builders
+- Prefer the powerful x86_64 NixOS machine as a remote builder for other hosts. Configure on controller:
+  - `nix.settings.trusted-users = [ "<you>" ];`
+  - `nix.buildMachines = [ { hostName = "nixos"; system = "x86_64-linux"; maxJobs = 8; speedFactor = 10; supportedFeatures = [ "kvm" "big-parallel" ]; } ];`
+  - For ARM builds via emulation on x86: ensure `boot.binfmt.emulatedSystems = [ "aarch64-linux" ];` on the builder and set `supportedSystems` in evaluations accordingly.
+
+### Homelab Notes
+- Local DNS: `services.dnsmasq` is enabled on macOS for several `*.dsco.io` dev domains; extend via `hosts/darwin/configuration.nix` or a darwin module.
+- SSH Key bootstrap: `apps/*/create-keys` and `copy-keys` manage macOS SSH keys and agenix keypair distribution.
+- Docker on NixOS is enabled in `hosts/nixos/default.nix` (`virtualisation.docker.enable = true`). Use modules for additional services (e.g., reverse proxies, exporters, monitoring) instead of inlining them in host files.
+
+### When Making Changes
+- Validate: `nix flake check` (if checks are defined), `nix flake show`, and try `nix build` for the target system.
+- Ensure macOS changes build locally via `nix run .#build` before `build-switch`.
+- Ensure NixOS host changes: `sudo nixos-rebuild build --flake .#<system>` or use the `apps` wrapper.
+- Keep diffs small; update README/docs when changing workflows or adding user-facing features.
+
+### Documentation Enhancements To Add
+- README: add a section for cross-arch deployment with `deploy-rs` and `nixos-anywhere` usage.
+- README: add Helios64-specific notes (DTB, storage layout with `disko`, network quirks, ZFS optional).
+- CI: ensure `nix fmt` + `statix` + optional `nix flake check` run on PRs.
+
+### Troubleshooting
+- Cache issues: clear result links and run with `--refresh` or set `--option builders-use-substitutes true`.
+- Permission issues on macOS: `apps/aarch64-darwin/build-switch` handles the required `sudo` path; prefer that entrypoint.
+- Secrets key not found: confirm `~/.ssh/id_ed25519_agenix` exists and that age public keys are present in the secrets modules.
+
+

@@ -20,6 +20,8 @@
         useOSProber = true;
       };
     };
+    # Enable cross-arch emulation so this host can build ARM images
+    binfmt.emulatedSystems = [ "aarch64-linux" ];
   };
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   networking = {

@@ -39,7 +39,7 @@
       flake = false;
     };
   };
-  outputs = { self, darwin, nix-homebrew, homebrew-bundle, homebrew-core, homebrew-cask, home-manager, nixpkgs, disko, fenix, ... } @inputs:
+  outputs = { self, darwin, nix-homebrew, homebrew-bundle, homebrew-core, homebrew-cask, home-manager, nixpkgs, disko, agenix, fenix, secrets, mcp-hub } @inputs:
     let
       user = "parallaxis";
       workUser = "pjones";
@@ -148,7 +148,7 @@
               home-manager = {
                 useGlobalPkgs = true;
                 useUserPackages = true;
-		            backupFileExtension = "backup";
+	            backupFileExtension = "backup";
                 users.${user} = import ./modules/nixos/home-manager.nix;
               };
             }
