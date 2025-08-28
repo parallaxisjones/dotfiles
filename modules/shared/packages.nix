@@ -25,7 +25,6 @@ with pkgs; [
   gcc
   git-filter-repo
   killall
-  neofetch
   openssh
   pandoc
   sqlite
@@ -107,4 +106,6 @@ with pkgs; [
   myPython
   lua-language-server
   aider-chat
+] ++ pkgs.lib.optionals (!pkgs.stdenv.isDarwin) [
+  neofetch
 ]
