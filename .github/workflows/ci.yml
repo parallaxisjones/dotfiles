@@ -23,7 +23,14 @@ jobs:
 
       - name: nixpkgs-fmt Check
         run: |
-          nix run --extra-experimental-features 'nix-command flakes' nixpkgs#nixpkgs-fmt -- --check .
+          set -euo pipefail
+          # Check all tracked .nix files except secrets file that may be managed separately
+          mapfile -t FILES < <(git ls-files '*.nix' ':!:modules/shared/secrets.nix')
+          if [ ${#FILES[@]} -eq 0 ]; then
+            echo "No .nix files to check"
+            exit 0
+          fi
+          nix run --extra-experimental-features 'nix-command flakes' nixpkgs#nixpkgs-fmt -- --check "${FILES[@]}"
 
       - name: Statix Lint
         run: |
