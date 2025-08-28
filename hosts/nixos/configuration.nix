@@ -21,10 +21,13 @@
         useOSProber = true;
       };
     };
-    # Enable cross-arch emulation so this host can build ARM images
-    binfmt.emulatedSystems = [ "aarch64-linux" ];
+    # Disable cross-arch emulation to reduce build load while converting this
+    # machine from desktop to server. Re-enable when needed.
+    # binfmt.emulatedSystems = [ "aarch64-linux" ];
   };
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  # Reduce local build parallelism to avoid thrashing during transition
+  nix.settings.max-jobs = 2;
   networking = {
     hostName = "nixos"; # Define your hostname.
     networkmanager.enable = true;
