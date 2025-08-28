@@ -1,6 +1,4 @@
-{ secrets, ... }:
-
-let user = "dustin"; in
+{ secrets, user, ... }:
 {
   age = {
     identityPaths = [
@@ -8,30 +6,12 @@ let user = "dustin"; in
     ];
 
     secrets = {
-      "syncthing-cert" = {
-        symlink = true;
-        path = "/home/${user}/.config/syncthing/cert.pem";
-        file = "${secrets}/felix-syncthing-cert.age";
-        mode = "600";
-        owner = "${user}";
-        group = "users";
-      };
-
-      "syncthing-key" = {
-        symlink = true;
-        path = "/home/{$user}/.config/syncthing/key.pem";
-        file = "${secrets}/felix-syncthing-key.age";
-        mode = "600";
-        owner = "${user}";
-        group = "users";
-      };
-
       "github-ssh-key" = {
         symlink = false;
         path = "/home/${user}/.ssh/id_github";
         file = "${secrets}/github-ssh-key.age";
         mode = "600";
-        owner = "${user}";
+        owner = user;
         group = "wheel";
       };
 
@@ -40,7 +20,7 @@ let user = "dustin"; in
         path = "/home/${user}/.ssh/pgp_github.key";
         file = "${secrets}/github-signing-key.age";
         mode = "600";
-        owner = "${user}";
+        owner = user;
         group = "wheel";
       };
     };
