@@ -8,5 +8,5 @@ let
 in
 {
   # Other file definitions can go here...
-  "${xdg_configHome}/mcphub/servers.json".text = builtins.toJSON { inherit mcpServers; };
+  # mcp-hub removed
 }

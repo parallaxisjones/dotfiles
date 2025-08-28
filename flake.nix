@@ -31,9 +31,7 @@
       url = "github:nix-community/fenix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    mcp-hub = {
-      url = "github:ravitemer/mcp-hub";
-    };
+    # mcp-hub removed
     secrets = {
       url = "https://git@github.com/parallaxisjones/nix-secrets.git?ref=main";
       flake = false;

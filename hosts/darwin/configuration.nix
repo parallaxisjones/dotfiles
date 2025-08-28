@@ -1,4 +1,4 @@
-{ config, pkgs, home-manager, mcp-hub, ... }:
+{ config, pkgs, home-manager, ... }:
 
 let
   # Pull in nix-darwin’s Home Manager engine (provided by the home-manager flake input)
@@ -64,7 +64,7 @@ in
   environment.systemPackages = with pkgs; [
     vim
     rage
-    mcp-hub.packages.${system}.default
+    # mcp-hub removed
   ];
 
   # Ensure ~/.ssh/known_hosts is a writable regular file, not a symlink, to avoid SSH known_hosts update issues
