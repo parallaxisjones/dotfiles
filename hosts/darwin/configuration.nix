@@ -46,11 +46,11 @@ in
     enable = true;
     bind = "127.0.0.1";
     addresses = {
-      "dev.dsco.io"              = "127.0.0.1";
-      "dev-core.dsco.io"         = "127.0.0.1";
-      "dev-core-ftp.dsco.io"     = "127.0.0.1";
-      "dev-core-static.dsco.io"  = "127.0.0.1";
-      "dev-core-images.dsco.io"  = "127.0.0.1";
+      "dev.dsco.io" = "127.0.0.1";
+      "dev-core.dsco.io" = "127.0.0.1";
+      "dev-core-ftp.dsco.io" = "127.0.0.1";
+      "dev-core-static.dsco.io" = "127.0.0.1";
+      "dev-core-images.dsco.io" = "127.0.0.1";
     };
     # settings = {
     #   "bind-interfaces" = true;
@@ -97,26 +97,26 @@ in
 
   # Use Zsh as the default shell
   programs.zsh.enable = true;
-  
+
   # Darwin-specific settings
   system = {
     stateVersion = 4;
-    primaryUser  = "pjones";
+    primaryUser = "pjones";
     defaults = {
       dock = {
-        autohide                 = true;
-        orientation              = "bottom";
-        show-process-indicators  = false;
-        show-recents             = false;
-        static-only              = true;
+        autohide = true;
+        orientation = "bottom";
+        show-process-indicators = false;
+        show-recents = false;
+        static-only = true;
       };
       finder = {
-        AppleShowAllExtensions          = true;
-        ShowPathbar                     = true;
-        FXEnableExtensionChangeWarning  = false;
+        AppleShowAllExtensions = true;
+        ShowPathbar = true;
+        FXEnableExtensionChangeWarning = false;
       };
       NSGlobalDomain = {
-        AppleKeyboardUIMode      = 3;
+        AppleKeyboardUIMode = 3;
         "com.apple.keyboard.fnState" = true;
       };
     };
@@ -127,8 +127,8 @@ in
   # Define the macOS user
   users.users.pjones = {
     # isNormalUser = true;
-    home         = "/Users/pjones";
-    shell        = pkgs.zsh;
+    home = "/Users/pjones";
+    shell = pkgs.zsh;
   };
 
   # macOS defaults are defined above in system.defaults

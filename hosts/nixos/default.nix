@@ -1,7 +1,9 @@
 { pkgs, agenix, ... }:
 
-let user = "parallaxis";
-    keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAao6hYRda8Dc88DgWHblVFV/HFCcj6kJuDWq7oqt7Aq" ]; in
+let
+  user = "parallaxis";
+  keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAao6hYRda8Dc88DgWHblVFV/HFCcj6kJuDWq7oqt7Aq" ];
+in
 {
   imports = [
     ../../modules/nixos/secrets.nix
@@ -49,7 +51,7 @@ let user = "parallaxis";
     extraOptions = ''
       experimental-features = nix-command flakes
     '';
-   };
+  };
 
   # Manages keys and such
   programs = {
@@ -128,8 +130,8 @@ let user = "parallaxis";
           "class_g = 'i3lock'"
         ];
         round-borders = 3;
-        round-borders-exclude = [];
-        round-borders-rule = [];
+        round-borders-exclude = [ ];
+        round-borders-rule = [ ];
         shadow = true;
         shadow-radius = 8;
         shadow-opacity = 0.4;
@@ -256,9 +258,9 @@ let user = "parallaxis";
     enable = true;
     extraRules = [{
       commands = [
-       {
-         command = "${pkgs.systemd}/bin/reboot";
-         options = [ "NOPASSWD" ];
+        {
+          command = "${pkgs.systemd}/bin/reboot";
+          options = [ "NOPASSWD" ];
         }
       ];
       groups = [ "wheel" ];

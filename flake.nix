@@ -22,7 +22,7 @@
     homebrew-cask = {
       url = "github:homebrew/homebrew-cask";
       flake = false;
-    }; 
+    };
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -46,35 +46,36 @@
       linuxSystems = [ "x86_64-linux" "aarch64-linux" ];
       darwinSystems = [ "aarch64-darwin" "x86_64-darwin" ];
       forAllSystems = f: nixpkgs.lib.genAttrs (linuxSystems ++ darwinSystems) f;
-      devShell = system: let pkgs = nixpkgs.legacyPackages.${system}; in {
-        default = with pkgs; mkShell {
-          nativeBuildInputs = with pkgs; [ bashInteractive git age age-plugin-yubikey ];
-          shellHook = with pkgs; ''
-            export EDITOR=nvim
-          '';
+      devShell = system:
+        let pkgs = nixpkgs.legacyPackages.${system}; in {
+          default = with pkgs; mkShell {
+            nativeBuildInputs = with pkgs; [ bashInteractive git age age-plugin-yubikey ];
+            shellHook = with pkgs; ''
+              export EDITOR=nvim
+            '';
+          };
+          gleam = with pkgs; mkShell {
+            name = "gleam-shell";
+            buildInputs = [ erlang elixir gleam ];
+            shellHook = ''
+              echo "Entering Gleam shell"
+            '';
+          };
+          elixir = with pkgs; mkShell {
+            name = "elixir-shell";
+            buildInputs = [ erlang elixir ];
+            shellHook = ''
+              echo "Entering Elixir shell"
+            '';
+          };
+          zig = with pkgs; mkShell {
+            name = "zig-shell";
+            buildInputs = [ zig ];
+            shellHook = ''
+              echo "Entering Zig shell"
+            '';
+          };
         };
-        gleam = with pkgs; mkShell {
-          name = "gleam-shell";
-          buildInputs = [ erlang elixir gleam ];
-          shellHook = ''
-            echo "Entering Gleam shell"
-          '';
-        };
-        elixir = with pkgs; mkShell {
-          name = "elixir-shell";
-          buildInputs = [ erlang elixir ];
-          shellHook = ''
-            echo "Entering Elixir shell"
-          '';
-        };
-        zig = with pkgs; mkShell {
-          name = "zig-shell";
-          buildInputs = [ zig ];
-          shellHook = ''
-            echo "Entering Zig shell"
-          '';
-        };
-      };
       mkApp = scriptName: system: {
         type = "app";
         program = "${(nixpkgs.legacyPackages.${system}.writeScriptBin scriptName ''
@@ -102,12 +103,14 @@
         "check-keys" = mkApp "check-keys" system;
         "rollback" = mkApp "rollback" system;
       };
-      overlays = let
-        overlayPath = ./overlays;
-        overlayFiles = builtins.attrNames (builtins.readDir overlayPath);
-        nixFiles = builtins.filter (f: builtins.match ".*\\.nix" f != null) overlayFiles;
-        toPath = f: overlayPath + ("/" + f);
-      in map import (map toPath nixFiles);
+      overlays =
+        let
+          overlayPath = ./overlays;
+          overlayFiles = builtins.attrNames (builtins.readDir overlayPath);
+          nixFiles = builtins.filter (f: builtins.match ".*\\.nix" f != null) overlayFiles;
+          toPath = f: overlayPath + ("/" + f);
+        in
+        map import (map toPath nixFiles);
     in
     {
       devShells = forAllSystems devShell;
@@ -144,28 +147,29 @@
           specialArgs = inputs;
           modules = [
             disko.nixosModules.disko
-            home-manager.nixosModules.home-manager {
+            home-manager.nixosModules.home-manager
+            {
               home-manager = {
                 useGlobalPkgs = true;
                 useUserPackages = true;
-	            backupFileExtension = "backup";
+                backupFileExtension = "backup";
                 users.${user} = import ./modules/nixos/home-manager.nix;
               };
             }
             ({ pkgs, ... }: {
               nixpkgs.overlays = [ fenix.overlays.default ];
               environment.systemPackages = with pkgs; [
-              (fenix.packages.${system}.complete.withComponents [
-                "cargo"
-                "clippy"
-                "rust-src"
-                "rustc"
-                "rustfmt"
-                "rust-analyzer"
-              ])
-              rust-analyzer-nightly
-            ];
-          })
+                (fenix.packages.${system}.complete.withComponents [
+                  "cargo"
+                  "clippy"
+                  "rust-src"
+                  "rustc"
+                  "rustfmt"
+                  "rust-analyzer"
+                ])
+                rust-analyzer-nightly
+              ];
+            })
             # ./modules/shared/secrets.nix
             ./hosts/nixos/configuration.nix
           ];

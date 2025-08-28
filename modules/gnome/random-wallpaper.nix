@@ -22,18 +22,18 @@ in
   # Make the script and its helpers available to all users
   environment.systemPackages = [
     randomWallpaper
-    pkgs.findutils            # for `find`
-    pkgs.coreutils            # for `realpath`, `shuf`
-    pkgs.gsettings-desktop-schemas  # GNOME gsettings schemas
+    pkgs.findutils # for `find`
+    pkgs.coreutils # for `realpath`, `shuf`
+    pkgs.gsettings-desktop-schemas # GNOME gsettings schemas
   ];
 
   # Systemd USER service: run the script once on demand
   systemd.user.services.random-wallpaper = {
     description = "Pick a random GNOME wallpaper";
-    after       = [ "graphical-session.target" ];
-    wantedBy    = [ "graphical-session.target" ];
+    after = [ "graphical-session.target" ];
+    wantedBy = [ "graphical-session.target" ];
     serviceConfig = {
-      Type      = "oneshot";
+      Type = "oneshot";
       ExecStart = "${randomWallpaper}";
     };
   };
@@ -41,12 +41,12 @@ in
   # Systemd USER timer: fire that service every hour
   systemd.user.timers.random-wallpaper = {
     description = "Rotate GNOME wallpaper hourly";
-    wantedBy    = [ "timers.target" ];
+    wantedBy = [ "timers.target" ];
     timerConfig = {
       # OnUnitActiveSec = "1min";
       # Persistent      = true;  # if the machine was off, run at next login
       OnCalendar = "hourly";
-      Persistent = true;  # if the machine was off/missed a beat, run at next boot
+      Persistent = true; # if the machine was off/missed a beat, run at next boot
     };
   };
 }

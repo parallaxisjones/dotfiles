@@ -2,9 +2,9 @@
 
 let
   user = "parallaxis";
-  xdg_configHome  = "/home/${user}/.config";
+  xdg_configHome = "/home/${user}/.config";
   shared-programs = import ../shared/home-manager.nix { inherit config pkgs lib; };
-  sharedFiles     = import ../shared/files.nix { inherit config pkgs lib; };
+  sharedFiles = import ../shared/files.nix { inherit config pkgs lib; };
   additionalFiles = import ./files.nix { inherit user config pkgs; };
   # wallpaper-rotation = import ../gnome/random-wallpaper.nix {
   #   inherit config pkgs lib;
@@ -39,7 +39,7 @@ in
     enableNixpkgsReleaseCheck = false;
     username = "${user}";
     homeDirectory = "/home/${user}";
-    packages = pkgs.callPackage ./packages.nix {};
+    packages = pkgs.callPackage ./packages.nix { };
     file = sharedFiles // additionalFiles;
     stateVersion = "21.05";
     activation.ensureCheatPersonalDir = lib.hm.dag.entryAfter [ "writeBoundary" ] ''

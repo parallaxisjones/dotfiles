@@ -1,16 +1,18 @@
 { pkgs, lib, ... }:
 
-let name = "Parker Jones";
-    user = "parallaxis";
-    workUser = "pjones";
-    email = "parker.jones@rithum.com"; in
+let
+  name = "Parker Jones";
+  user = "parallaxis";
+  workUser = "pjones";
+  email = "parker.jones@rithum.com";
+in
 {
 
   direnv = {
-      enable = true;
-      enableZshIntegration = true;
-      nix-direnv.enable = true;
-    };
+    enable = true;
+    enableZshIntegration = true;
+    nix-direnv.enable = true;
+  };
 
   zsh = {
     enable = true;
@@ -18,14 +20,14 @@ let name = "Parker Jones";
     cdpath = [ "~/.local/share/src" ];
     plugins = [
       {
-          name = "powerlevel10k";
-          src = pkgs.zsh-powerlevel10k;
-          file = "share/zsh-powerlevel10k/powerlevel10k.zsh-theme";
+        name = "powerlevel10k";
+        src = pkgs.zsh-powerlevel10k;
+        file = "share/zsh-powerlevel10k/powerlevel10k.zsh-theme";
       }
       {
-          name = "powerlevel10k-config";
-          src = lib.cleanSource ./config;
-          file = "p10k.zsh";
+        name = "powerlevel10k-config";
+        src = lib.cleanSource ./config;
+        file = "p10k.zsh";
       }
     ];
     initContent = lib.mkBefore ''
@@ -74,7 +76,7 @@ let name = "Parker Jones";
     extraConfig = {
       init.defaultBranch = "main";
       core = {
-	editor = "nvim";
+        editor = "nvim";
         autocrlf = "input";
       };
       difftastic.enable = false;
@@ -83,8 +85,8 @@ let name = "Parker Jones";
       rebase.autoStash = true;
       # Use SSH‐based commit signing…
       gpg = {
-      	format = "ssh";
-	sshProgram = "${pkgs._1password-gui}/bin/op-ssh-sign";
+        format = "ssh";
+        sshProgram = "${pkgs._1password-gui}/bin/op-ssh-sign";
       };
     };
   };
@@ -196,8 +198,8 @@ let name = "Parker Jones";
 
       let g:airline_theme='bubblegum'
       let g:airline_powerline_fonts = 1
-      '';
-     };
+    '';
+  };
 
   alacritty = {
     enable = true;
@@ -328,7 +330,7 @@ let name = "Parker Jones";
       {
         plugin = power-theme;
         extraConfig = ''
-           set -g @tmux_power_theme 'gold'
+          set -g @tmux_power_theme 'gold'
         '';
       }
       {
@@ -401,7 +403,7 @@ let name = "Parker Jones";
       bind-key -T copy-mode-vi 'C-k' select-pane -U
       bind-key -T copy-mode-vi 'C-l' select-pane -R
       bind-key -T copy-mode-vi 'C-\' select-pane -l
-      '';
-    };
+    '';
+  };
 
 }
