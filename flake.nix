@@ -149,14 +149,15 @@
             modules = [
               disko.nixosModules.disko
               home-manager.nixosModules.home-manager
-              {
+              ({ config, ... }: {
                 home-manager = {
                   useGlobalPkgs = true;
                   useUserPackages = true;
                   backupFileExtension = "backup";
+                  extraSpecialArgs = { isDesktop = (config.services.xserver.enable or false); };
                   users.${user} = import ./modules/nixos/home-manager.nix;
                 };
-              }
+              })
               ({ pkgs, ... }: {
                 # Keep overlays available but avoid installing large Rust toolchains
                 # by default on NixOS hosts to reduce build time and memory pressure.
@@ -174,14 +175,15 @@
           modules = [
             disko.nixosModules.disko
             home-manager.nixosModules.home-manager
-            {
+            ({ config, ... }: {
               home-manager = {
                 useGlobalPkgs = true;
                 useUserPackages = true;
                 backupFileExtension = "backup";
+                extraSpecialArgs = { isDesktop = (config.services.xserver.enable or false); };
                 users.${user} = import ./modules/nixos/home-manager.nix;
               };
-            }
+            })
             (_: {
               nixpkgs.overlays = [ fenix.overlays.default ] ++ overlays;
             })
