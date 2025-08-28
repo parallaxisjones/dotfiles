@@ -106,20 +106,21 @@
       #  thunderbird
     ];
   };
-  programs.steam = {
-    enable = true;
-    remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
-    dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
-    localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
-  };
+  # Steam (disabled in minimal profile)
+  # programs.steam = {
+  #   enable = true;
+  #   remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
+  #   dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
+  #   localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
+  # };
   # Enable automatic login moved into services set above
 
   # Workaround for GNOME autologin: https://github.com/NixOS/nixpkgs/issues/103746#issuecomment-945091229
   systemd.services."getty@tty1".enable = false;
   systemd.services."autovt@tty1".enable = false;
 
-  # Install firefox.
-  programs.firefox.enable = true;
+  # Install firefox (desktop profile only)
+  # programs.firefox.enable = true;
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
@@ -127,18 +128,12 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-    #  wget
     neovim
-    brave
-    _1password-gui
-    _1password-cli
     git
     curl
     wget
     ripgrep
     fzf
-    # mcp-hub removed
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
