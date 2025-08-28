@@ -158,7 +158,7 @@
                 };
               }
               ({ pkgs, ... }: {
-                nixpkgs.overlays = [ fenix.overlays.default ];
+                nixpkgs.overlays = [ fenix.overlays.default ] ++ overlays;
                 environment.systemPackages = with pkgs; [
                   (fenix.packages.${system}.complete.withComponents [
                     "cargo"
@@ -192,7 +192,7 @@
               };
             }
             (_: {
-              nixpkgs.overlays = [ fenix.overlays.default ];
+              nixpkgs.overlays = [ fenix.overlays.default ] ++ overlays;
             })
             ./hosts/nixos/helios64.nix
           ];
