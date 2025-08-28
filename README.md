@@ -62,8 +62,32 @@ Notes:
 
 Use a beefy x86_64 NixOS builder to compile `aarch64-linux` and `x86_64-linux`, and offload from macOS M3.
 
-- Setup and verification: `docs/REMOTE_BUILDERS.md`
-- Tip: from macOS, verify offload with a build of `.#nixosConfigurations.<host>...`
+Quick setup:
+- On the builder (NixOS):
+  - Enable ARM emulation if needed:
+    ```nix
+    boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+    ```
+  - Ensure your user can act as a builder and that SSH is reachable via alias `nixos`.
+  - Example `/etc/nix/machines` entry:
+    ```
+    nixos x86_64-linux / - 8 1 kvm,big-parallel
+    ```
+- On macOS (controller):
+  - Ensure SSH access to the builder via alias `nixos` and loaded keys (`ssh-add -l`).
+  - Configure remote builders (e.g., `/etc/nix/nix.conf`):
+    ```
+    builders-use-substitutes = true
+    max-jobs = 0
+    builders = @/etc/nix/machines
+    ```
+
+Verify:
+- List systems in this flake: `nix eval .#nixosConfigurations --apply builtins.attrNames`
+- Test remote build: `nix build .#nixosConfigurations.<host>.config.system.build.toplevel`
+  (from macOS, the work should occur on `nixos`).
+
+See `docs/REMOTE_BUILDERS.md` for details.
 
 ## Helios64 (NAS)
 
