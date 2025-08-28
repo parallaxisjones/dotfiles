@@ -25,7 +25,6 @@ with pkgs; [
   gcc
   git-filter-repo
   killall
-  neofetch
   openssh
   pandoc
   sqlite
@@ -83,7 +82,6 @@ with pkgs; [
   nodePackages.live-server
   nodePackages.nodemon
   nodePackages.prettier
-  nodePackages.npm
   nodejs
 
   # Source code management, Git, GitHub tools
@@ -108,4 +106,6 @@ with pkgs; [
   myPython
   lua-language-server
   aider-chat
+] ++ pkgs.lib.optionals (!pkgs.stdenv.isDarwin) [
+  neofetch
 ]
