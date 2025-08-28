@@ -47,8 +47,8 @@ in
     '';
   };
   # imports = [ wallpaper-rotation ];
-  # Use a dark theme
-  gtk = {
+  # Use a dark theme (desktop only)
+  gtk = lib.mkIf config.services.xserver.enable {
     enable = true;
     iconTheme = {
       name = "Adwaita-dark";
@@ -62,18 +62,18 @@ in
 
   # Screen lock
   services = {
-    screen-locker = {
+    screen-locker = lib.mkIf config.services.xserver.enable {
       enable = true;
       inactiveInterval = 10;
       lockCmd = "${pkgs.i3lock-fancy-rapid}/bin/i3lock-fancy-rapid 10 15";
     };
 
     # Auto mount devices
-    udiskie = {
+    udiskie = lib.mkIf config.services.xserver.enable {
       enable = true;
     };
 
-    polybar = {
+    polybar = lib.mkIf config.services.xserver.enable {
       enable = false;
       config = polybar-config;
       extraConfig = polybar-bars + polybar-colors + polybar-modules + polybar-user_modules;
@@ -81,7 +81,7 @@ in
       script = "polybar main &";
     };
 
-    dunst = {
+    dunst = lib.mkIf config.services.xserver.enable {
       enable = true;
       package = pkgs.dunst;
       settings = {
