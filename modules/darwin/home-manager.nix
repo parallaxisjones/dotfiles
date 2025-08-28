@@ -1,9 +1,9 @@
 { config, pkgs, lib, home-manager, agenix, ... }:
 
 let
-  user            = "pjones";
+  user = "pjones";
   # myEmacsLauncher was unused; removed to satisfy deadnix
-  sharedFiles     = import ../shared/files.nix { inherit config pkgs lib; };
+  sharedFiles = import ../shared/files.nix { inherit config pkgs lib; };
   additionalFiles = import ./files.nix { inherit user config pkgs; };
 in
 {
@@ -13,15 +13,15 @@ in
   ];
 
   users.users.${user} = {
-    name     = "${user}";
-    home     = "/Users/${user}";
+    name = "${user}";
+    home = "/Users/${user}";
     isHidden = false;
     # shell    = pkgs.zsh;
   };
 
   homebrew = {
     enable = true;
-    casks  = pkgs.callPackage ./casks.nix {};
+    casks = pkgs.callPackage ./casks.nix { };
   };
 
   home-manager = {
@@ -29,7 +29,7 @@ in
     users.${user} = { pkgs, config, lib, ... }: {
       home = {
         enableNixpkgsReleaseCheck = false;
-        packages                 = pkgs.callPackage ./packages.nix {};
+        packages = pkgs.callPackage ./packages.nix { };
         file = lib.mkMerge [
           sharedFiles
           additionalFiles
@@ -70,7 +70,7 @@ in
         # ./secrets.nix 
       ];
       # ─────────────────────────────────────────────────────────────────────────
-      programs = {} // import ../shared/home-manager.nix { inherit config pkgs lib; };
+      programs = { } // import ../shared/home-manager.nix { inherit config pkgs lib; };
       manual.manpages.enable = false;
 
       # Ensure a writable known_hosts exists for the user (not a symlink)
@@ -85,8 +85,8 @@ in
   };
 
   local.dock = {
-    enable   = true;
+    enable = true;
     username = user;
-    entries  = [];
+    entries = [ ];
   };
 }

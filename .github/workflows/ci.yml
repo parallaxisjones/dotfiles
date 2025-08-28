@@ -1,6 +1,8 @@
 name: CI
 
 on:
+  push:
+    branches: [ main ]
   pull_request:
     branches:
       - main
@@ -18,6 +20,17 @@ jobs:
 
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@main
+
+      - name: nixpkgs-fmt Check
+        run: |
+          set -euo pipefail
+          # Check all tracked .nix files except secrets file that may be managed separately
+          mapfile -t FILES < <(git ls-files '*.nix' ':!:modules/shared/secrets.nix')
+          if [ ${#FILES[@]} -eq 0 ]; then
+            echo "No .nix files to check"
+            exit 0
+          fi
+          nix run --extra-experimental-features 'nix-command flakes' nixpkgs#nixpkgs-fmt -- --check "${FILES[@]}"
 
       - name: Statix Lint
         run: |
@@ -67,6 +80,50 @@ jobs:
           nix --extra-experimental-features 'nix-command flakes' eval .#darwinConfigurations.x86_64-darwin.system
           nix --extra-experimental-features 'nix-command flakes' eval .#nixosConfigurations.x86_64-linux.config.system.build.toplevel
           nix --extra-experimental-features 'nix-command flakes' eval .#nixosConfigurations.aarch64-linux.config.system.build.toplevel
+          nix --extra-experimental-features 'nix-command flakes' eval .#nixosConfigurations.helios64.config.system.build.toplevel
+
+  cachix-push:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+
+      - name: Install Cachix
+        uses: cachix/cachix-action@v14
+        with:
+          name: parallaxisjones
+          authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+
+      - name: Build and push x86_64-linux system
+        run: |
+          nix build --extra-experimental-features 'nix-command flakes' .#nixosConfigurations.x86_64-linux.config.system.build.toplevel
+          cachix push parallaxisjones ./result
+
+      - name: Append flake show to PR summary
+        if: github.event_name == 'pull_request'
+        run: |
+          {
+            echo "## Flake Show";
+            echo;
+            echo '```';
+            nix --extra-experimental-features 'nix-command flakes' flake show
+            echo '```';
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Append flake check result to PR summary
+        if: github.event_name == 'pull_request' && success()
+        run: |
+          {
+            echo "## Flake Check";
+            echo;
+            echo "flake check passed on all systems.";
+          } >> "$GITHUB_STEP_SUMMARY"
 
   automerge:
     if: github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'automerge')

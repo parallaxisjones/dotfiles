@@ -26,8 +26,15 @@ The repository is organized as follows:
 
 To apply changes to the system configuration, edit the relevant Nix files and then run the following command:
 
-```bash
+```
 nix run .#build-switch
 ```
 
 This script will build the new configuration and activate it.
+
+## Documentation
+
+- `docs/ROADMAP.md` – phased plan and current state
+- `docs/HELIOS64.md` – RK3399/Helios64 checklist and install notes
+- `docs/REMOTE_BUILDERS.md` – x86 builder and macOS M3 flows
+- `docs/DEPLOYMENT.md` – deploy-rs and nixos-anywhere usage

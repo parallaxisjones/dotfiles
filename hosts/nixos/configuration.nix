@@ -6,7 +6,8 @@
 
 {
   imports =
-    [ # Include the results of the hardware scan.
+    [
+      # Include the results of the hardware scan.
       ./hardware-configuration.nix
       ../../modules/gnome/random-wallpaper.nix
     ];
@@ -20,6 +21,8 @@
         useOSProber = true;
       };
     };
+    # Enable cross-arch emulation so this host can build ARM images
+    binfmt.emulatedSystems = [ "aarch64-linux" ];
   };
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   networking = {
@@ -100,7 +103,7 @@
     description = "Parker Jones";
     extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [
-    #  thunderbird
+      #  thunderbird
     ];
   };
   programs.steam = {
@@ -124,18 +127,18 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-  #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-  #  wget
-  neovim
-  brave
-  _1password-gui
-  _1password-cli
-  git
-  curl
-  wget
-  ripgrep
-  fzf
-  mcp-hub.packages.${system}.default
+    #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+    #  wget
+    neovim
+    brave
+    _1password-gui
+    _1password-cli
+    git
+    curl
+    wget
+    ripgrep
+    fzf
+    mcp-hub.packages.${system}.default
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
