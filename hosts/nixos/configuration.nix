@@ -9,7 +9,9 @@
     [
       # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      ../../modules/gnome/random-wallpaper.nix
+      # Role-based profiles (pick minimal for now)
+      ./profiles/minimal.nix
+      # ./profiles/desktop-gnome.nix
     ];
 
   # Bootloader.
@@ -60,24 +62,25 @@
   };
 
   # Enable the X11 windowing system and GNOME Desktop Environment.
-  services = {
-    xserver = {
-      enable = true;
-      displayManager = {
-        gdm.enable = true;
-        autoLogin = {
-          enable = true;
-          user = "parallaxis";
-        };
-      };
-      desktopManager.gnome.enable = true;
-      xkb = {
-        layout = "us";
-        variant = "";
-      };
-    };
-    printing.enable = true;
-  };
+  # Keep GNOME desktop config commented while in minimal mode
+  # services = {
+  #   xserver = {
+  #     enable = true;
+  #     displayManager = {
+  #       gdm.enable = true;
+  #       autoLogin = {
+  #         enable = true;
+  #         user = "parallaxis";
+  #       };
+  #     };
+  #     desktopManager.gnome.enable = true;
+  #     xkb = {
+  #       layout = "us";
+  #       variant = "";
+  #     };
+  #   };
+  #   printing.enable = true;
+  # };
 
   # Configure keymap in X11 moved into services.xserver above
 
