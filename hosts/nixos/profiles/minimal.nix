@@ -1,9 +1,9 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 {
   # Minimal, headless-friendly profile for stability during transition.
   services.xserver.enable = false;
   services.printing.enable = false;
-  programs.steam.enable = false;
+  programs.steam.enable = lib.mkDefault false;
   sound.enable = false;
   hardware.pulseaudio.enable = false;
   services.pipewire.enable = false;
