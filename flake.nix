@@ -158,18 +158,9 @@
                 };
               }
               ({ pkgs, ... }: {
+                # Keep overlays available but avoid installing large Rust toolchains
+                # by default on NixOS hosts to reduce build time and memory pressure.
                 nixpkgs.overlays = [ fenix.overlays.default ] ++ overlays;
-                environment.systemPackages = with pkgs; [
-                  (fenix.packages.${system}.complete.withComponents [
-                    "cargo"
-                    "clippy"
-                    "rust-src"
-                    "rustc"
-                    "rustfmt"
-                    "rust-analyzer"
-                  ])
-                  rust-analyzer-nightly
-                ];
               })
               # ./modules/shared/secrets.nix
               ./hosts/nixos/configuration.nix
