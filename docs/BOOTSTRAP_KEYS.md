@@ -25,6 +25,13 @@ This guide covers bootstrapping a new machine and managing keys for secrets, Git
 
 ## Generate keys
 
+## Why these tools (rationale)
+
+- **age + agenix vs ad-hoc secrets**: age is simple, modern, and audited; agenix integrates cleanly with Nix so decryption happens only where authorized. This avoids leaking secrets into the store and keeps policies declarative and reviewable in Git.
+- **Separate `secrets` flake input**: clean separation of concerns; operationally, you can lock or revoke access independently, and rotate recipients without touching app code. It also supports air-gapped overrides.
+- **SSH agent forwarding**: enables first-boot installs to securely fetch private inputs without copying keys to the installer. Nothing persistent remains on the installer once finished.
+- **Remote builders**: compile-heavy derivations (e.g., `aarch64-linux`) build on a powerful x86_64 host, cutting local dev time on macOS M3/ARM and keeping laptops cooler. Improves CI parity and speeds iteration.
+
 ### SSH (user)
 
 ```bash
@@ -57,6 +64,45 @@ nix shell nixpkgs#age-plugin-ssh -c true   # ensure plugin available
 Ensure `age-plugin-ssh` is present on machines that decrypt.
 
 ## Wire keys into Nix modules
+
+## Common scenarios
+
+### Scenario A: New NixOS host, needs secrets during first install
+
+- You want the machine to come up with working GitHub access and app tokens.
+- Steps:
+  1) Generate/prepare deploy/user SSH keys on your workstation and ensure the agent is loaded.
+  2) Boot target into the NixOS installer, checkout this repo, and run `nix run .#install-with-secrets`.
+  3) The script runs `disko`, stages repo to `/mnt/etc/nixos`, and installs via the flake.
+  4) Ensure `SSH_AUTH_SOCK` is forwarded for private `secrets` fetches.
+- Result: first boot matches repo state; secrets are provisioned where declared.
+
+### Scenario B: macOS development, offload builds to x86_64 builder
+
+- You iterate on Linux configs/services from an M3 laptop.
+- Steps:
+  1) Configure remote builders as per `docs/REMOTE_BUILDERS.md`.
+  2) Build Linux targets from macOS; watch the x86 builder do the work.
+  3) Use `nix run .#build`/`.#build-switch` on Darwin as usual for your own machine.
+- Result: fast feedback without local compilation burden; reproducible builds.
+
+### Scenario C: Rotating SSH/age keys
+
+- You need to replace a compromised or old key.
+- Steps:
+  1) Generate new key; update GitHub deploy keys and user keys as needed.
+  2) Update recipient public keys in `modules/shared/secrets/keys/` and agenix config.
+  3) Re-encrypt affected `.age` files with `agenix -e`.
+  4) Redeploy; verify decryption only on intended hosts.
+- Result: secrets remain protected; minimal churn in app code.
+
+### Scenario D: Air-gapped/limited network install
+
+- No access to private Git over SSH during install.
+- Steps:
+  1) Use HTTPS or a local path override for the `secrets` input.
+  2) Run `install-with-secrets`; after network is restored, switch back to SSH input.
+- Result: install proceeds; you revert to secure defaults post-setup.
 
 ### Reference recipient public keys
 
