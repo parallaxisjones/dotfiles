@@ -141,9 +141,44 @@
           ];
         }
       );
-      nixosConfigurations = nixpkgs.lib.genAttrs linuxSystems (system:
-        nixpkgs.lib.nixosSystem {
-          inherit system;
+      nixosConfigurations = (
+        nixpkgs.lib.genAttrs linuxSystems (system:
+          nixpkgs.lib.nixosSystem {
+            inherit system;
+            specialArgs = inputs;
+            modules = [
+              disko.nixosModules.disko
+              home-manager.nixosModules.home-manager
+              {
+                home-manager = {
+                  useGlobalPkgs = true;
+                  useUserPackages = true;
+                  backupFileExtension = "backup";
+                  users.${user} = import ./modules/nixos/home-manager.nix;
+                };
+              }
+              ({ pkgs, ... }: {
+                nixpkgs.overlays = [ fenix.overlays.default ];
+                environment.systemPackages = with pkgs; [
+                  (fenix.packages.${system}.complete.withComponents [
+                    "cargo"
+                    "clippy"
+                    "rust-src"
+                    "rustc"
+                    "rustfmt"
+                    "rust-analyzer"
+                  ])
+                  rust-analyzer-nightly
+                ];
+              })
+              # ./modules/shared/secrets.nix
+              ./hosts/nixos/configuration.nix
+            ];
+          }
+        )
+      ) // {
+        helios64 = nixpkgs.lib.nixosSystem {
+          system = "aarch64-linux";
           specialArgs = inputs;
           modules = [
             disko.nixosModules.disko
@@ -158,22 +193,10 @@
             }
             ({ pkgs, ... }: {
               nixpkgs.overlays = [ fenix.overlays.default ];
-              environment.systemPackages = with pkgs; [
-                (fenix.packages.${system}.complete.withComponents [
-                  "cargo"
-                  "clippy"
-                  "rust-src"
-                  "rustc"
-                  "rustfmt"
-                  "rust-analyzer"
-                ])
-                rust-analyzer-nightly
-              ];
             })
-            # ./modules/shared/secrets.nix
-            ./hosts/nixos/configuration.nix
+            ./hosts/nixos/helios64.nix
           ];
-        }
-      );
+        };
+      };
     };
 }
