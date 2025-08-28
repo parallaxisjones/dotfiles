@@ -105,7 +105,7 @@ with pkgs; [
   eza
   myPython
   lua-language-server
-  aider-chat
+  # aider removed due to heavy dependency closure and test flakiness
 ] ++ pkgs.lib.optionals (!pkgs.stdenv.isDarwin) [
   neofetch
 ]
