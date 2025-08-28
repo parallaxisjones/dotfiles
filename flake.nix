@@ -191,7 +191,7 @@
                 users.${user} = import ./modules/nixos/home-manager.nix;
               };
             }
-            ({ ... }: {
+            (_: {
               nixpkgs.overlays = [ fenix.overlays.default ];
             })
             ./hosts/nixos/helios64.nix
