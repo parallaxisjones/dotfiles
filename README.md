@@ -82,3 +82,11 @@ Use a beefy x86_64 NixOS builder to compile `aarch64-linux` and `x86_64-linux`, 
 - Cross-arch remote builds: Done
 - Helios64 initial planning/install docs: Done
 - Next up: storage + services modules, deploy-rs, hardening/observability
+
+## Documentation
+
+- `docs/ROADMAP.md` – phased plan and current state
+- `docs/HELIOS64.md` – RK3399/Helios64 checklist and install notes
+- `docs/REMOTE_BUILDERS.md` – x86 builder and macOS M3 flows
+- `docs/DEPLOYMENT.md` – deploy-rs and nixos-anywhere usage
+- `docs/BOOTSTRAP_KEYS.md` – bootstrap and key management guide
