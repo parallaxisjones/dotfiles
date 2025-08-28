@@ -4,7 +4,6 @@
   services.xserver.enable = false;
   services.printing.enable = false;
   programs.steam.enable = lib.mkDefault false;
-  sound.enable = false;
   hardware.pulseaudio.enable = false;
   services.pipewire.enable = false;
   services.gvfs.enable = false;
