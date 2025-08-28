@@ -9,8 +9,8 @@
   services.gvfs.enable = false;
   services.tumbler.enable = false;
 
-  # Basic server utilities
-  environment.systemPackages = (config.environment.systemPackages or []) ++ [
+  # Basic server utilities (append without self-reference)
+  environment.systemPackages = lib.mkAfter [
     pkgs.htop
     pkgs.iotop
     pkgs.nmon
