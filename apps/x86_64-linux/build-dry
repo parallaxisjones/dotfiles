@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ARCH=$(uname -m)
+case "$ARCH" in
+  x86_64) FLAKE_TARGET="x86_64-linux" ;;
+  aarch64) FLAKE_TARGET="aarch64-linux" ;;
+  *) echo "Unsupported arch: $ARCH" >&2; exit 1 ;;
+esac
+
+exec nix build .#nixosConfigurations.${FLAKE_TARGET}.config.system.build.toplevel --print-build-logs "$@"
+
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Serialized, non-switch build of the NixOS toplevel for this arch.
+# Useful for debugging without activating a new generation.
+
+ARCH=$(uname -m)
+case "$ARCH" in
+  x86_64) FLAKE_TARGET="x86_64-linux" ;;
+  aarch64) FLAKE_TARGET="aarch64-linux" ;;
+  *) echo "Unsupported arch: $ARCH" >&2; exit 1 ;;
+esac
+
+exec nix build .#nixosConfigurations.${FLAKE_TARGET}.config.system.build.toplevel --print-build-logs "$@"
+
+
