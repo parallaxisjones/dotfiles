@@ -145,7 +145,7 @@
         nixpkgs.lib.genAttrs linuxSystems (system:
           nixpkgs.lib.nixosSystem {
             inherit system;
-            specialArgs = inputs;
+            specialArgs = inputs // { inherit user; };
             modules = [
               disko.nixosModules.disko
               home-manager.nixosModules.home-manager
@@ -179,7 +179,7 @@
       ) // {
         helios64 = nixpkgs.lib.nixosSystem {
           system = "aarch64-linux";
-          specialArgs = inputs;
+          specialArgs = inputs // { inherit user; };
           modules = [
             disko.nixosModules.disko
             home-manager.nixosModules.home-manager

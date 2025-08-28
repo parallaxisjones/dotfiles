@@ -59,6 +59,14 @@ Deliverables:
 Deliverables:
 - Security and observability modules and docs.
 
+### Phase 3.x · Secrets consolidation (agenix + flake input)
+- Standardize `secrets` flake input (SSH deploy key or HTTPS fallback).
+- Pass `user` via `specialArgs` to avoid hardcoded usernames.
+- Centralize public keys under `modules/shared/secrets/keys/` and reference with `builtins.readFile`.
+- Remove legacy template paths; fix typos and stale references.
+- Define a minimal set of age secrets (GitHub SSH, signing keys, app tokens) and document rotation.
+- Add installer checklist for fetching `secrets` input on first build (network, SSH agent, or HTTPS).
+
 ## Backlog / Ideas
 - Tailscale/WireGuard access
 - Offsite backups (restic/borg) and snapshot policies
