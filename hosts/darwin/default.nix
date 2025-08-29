@@ -38,7 +38,7 @@ let user = "pjones"; in
     emacs
     agenix.packages."${pkgs.system}".default
   ] ++ (import ../../modules/shared/packages.nix { inherit pkgs; })
-    ++ (import ../../modules/shared/packages-desktop.nix { inherit pkgs; });
+  ++ (import ../../modules/shared/packages-desktop.nix { inherit pkgs; });
 
   #launchd.user.agents = {
   #  emacs = {

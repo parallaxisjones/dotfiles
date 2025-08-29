@@ -154,7 +154,7 @@
                   useGlobalPkgs = true;
                   useUserPackages = true;
                   backupFileExtension = "backup";
-                  extraSpecialArgs = { isDesktop = (config.services.xserver.enable or false); };
+                  extraSpecialArgs = { isDesktop = config.services.xserver.enable or false; };
                   users.${user} = import ./modules/nixos/home-manager.nix;
                 };
               })
@@ -180,7 +180,7 @@
                 useGlobalPkgs = true;
                 useUserPackages = true;
                 backupFileExtension = "backup";
-                extraSpecialArgs = { isDesktop = (config.services.xserver.enable or false); };
+                extraSpecialArgs = { isDesktop = config.services.xserver.enable or false; };
                 users.${user} = import ./modules/nixos/home-manager.nix;
               };
             })
