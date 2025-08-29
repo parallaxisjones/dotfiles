@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Darwin dry build of the current nix-darwin configuration (no switch)
+exec darwin-rebuild build --flake .#aarch64-darwin "$@"
+
+

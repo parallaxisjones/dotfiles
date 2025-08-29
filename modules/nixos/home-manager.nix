@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, isDesktop ? (config.services.xserver.enable or false), ... }:
 
 let
   user = "parallaxis";
@@ -47,8 +47,8 @@ in
     '';
   };
   # imports = [ wallpaper-rotation ];
-  # Use a dark theme
-  gtk = {
+  # Use a dark theme (desktop only)
+  gtk = lib.mkIf isDesktop {
     enable = true;
     iconTheme = {
       name = "Adwaita-dark";
@@ -62,18 +62,18 @@ in
 
   # Screen lock
   services = {
-    screen-locker = {
+    screen-locker = lib.mkIf isDesktop {
       enable = true;
       inactiveInterval = 10;
       lockCmd = "${pkgs.i3lock-fancy-rapid}/bin/i3lock-fancy-rapid 10 15";
     };
 
     # Auto mount devices
-    udiskie = {
+    udiskie = lib.mkIf isDesktop {
       enable = true;
     };
 
-    polybar = {
+    polybar = lib.mkIf isDesktop {
       enable = false;
       config = polybar-config;
       extraConfig = polybar-bars + polybar-colors + polybar-modules + polybar-user_modules;
@@ -81,7 +81,7 @@ in
       script = "polybar main &";
     };
 
-    dunst = {
+    dunst = lib.mkIf isDesktop {
       enable = true;
       package = pkgs.dunst;
       settings = {

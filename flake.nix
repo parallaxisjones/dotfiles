@@ -31,9 +31,7 @@
       url = "github:nix-community/fenix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    mcp-hub = {
-      url = "github:ravitemer/mcp-hub";
-    };
+    # mcp-hub removed
     secrets = {
       url = "https://git@github.com/parallaxisjones/nix-secrets.git?ref=main";
       flake = false;
@@ -81,13 +79,14 @@
         program = "${(nixpkgs.legacyPackages.${system}.writeScriptBin scriptName ''
           #!/usr/bin/env bash
           PATH=${nixpkgs.legacyPackages.${system}.git}/bin:$PATH
-          echo "Running ${scriptName} for ${system}"
-          exec ${self}/apps/${system}/${scriptName}
+          echo \"Running ${scriptName} for ${system}\"
+          exec bash ${self}/apps/${system}/${scriptName}
         '')}/bin/${scriptName}";
       };
       mkLinuxApps = system: {
         "apply" = mkApp "apply" system;
         "build-switch" = mkApp "build-switch" system;
+        "build-dry" = mkApp "build-dry" system;
         "copy-keys" = mkApp "copy-keys" system;
         "create-keys" = mkApp "create-keys" system;
         "check-keys" = mkApp "check-keys" system;
@@ -98,6 +97,7 @@
         "apply" = mkApp "apply" system;
         "build" = mkApp "build" system;
         "build-switch" = mkApp "build-switch" system;
+        "build-dry" = mkApp "build-dry" system;
         "copy-keys" = mkApp "copy-keys" system;
         "create-keys" = mkApp "create-keys" system;
         "check-keys" = mkApp "check-keys" system;
@@ -149,27 +149,19 @@
             modules = [
               disko.nixosModules.disko
               home-manager.nixosModules.home-manager
-              {
+              ({ config, ... }: {
                 home-manager = {
                   useGlobalPkgs = true;
                   useUserPackages = true;
                   backupFileExtension = "backup";
+                  extraSpecialArgs = { isDesktop = config.services.xserver.enable or false; };
                   users.${user} = import ./modules/nixos/home-manager.nix;
                 };
-              }
-              ({ pkgs, ... }: {
+              })
+              (_: {
+                # Keep overlays available but avoid installing large Rust toolchains
+                # by default on NixOS hosts to reduce build time and memory pressure.
                 nixpkgs.overlays = [ fenix.overlays.default ] ++ overlays;
-                environment.systemPackages = with pkgs; [
-                  (fenix.packages.${system}.complete.withComponents [
-                    "cargo"
-                    "clippy"
-                    "rust-src"
-                    "rustc"
-                    "rustfmt"
-                    "rust-analyzer"
-                  ])
-                  rust-analyzer-nightly
-                ];
               })
               # ./modules/shared/secrets.nix
               ./hosts/nixos/configuration.nix
@@ -183,14 +175,15 @@
           modules = [
             disko.nixosModules.disko
             home-manager.nixosModules.home-manager
-            {
+            ({ config, ... }: {
               home-manager = {
                 useGlobalPkgs = true;
                 useUserPackages = true;
                 backupFileExtension = "backup";
+                extraSpecialArgs = { isDesktop = config.services.xserver.enable or false; };
                 users.${user} = import ./modules/nixos/home-manager.nix;
               };
-            }
+            })
             (_: {
               nixpkgs.overlays = [ fenix.overlays.default ] ++ overlays;
             })

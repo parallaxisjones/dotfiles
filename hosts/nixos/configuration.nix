@@ -2,14 +2,16 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, mcp-hub, ... }:
+{ config, pkgs, ... }:
 
 {
   imports =
     [
       # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      ../../modules/gnome/random-wallpaper.nix
+      # Role-based profiles (pick minimal for now)
+      ./profiles/minimal.nix
+      # ./profiles/desktop-gnome.nix
     ];
 
   # Bootloader.
@@ -21,10 +23,13 @@
         useOSProber = true;
       };
     };
-    # Enable cross-arch emulation so this host can build ARM images
-    binfmt.emulatedSystems = [ "aarch64-linux" ];
+    # Disable cross-arch emulation to reduce build load while converting this
+    # machine from desktop to server. Re-enable when needed.
+    # binfmt.emulatedSystems = [ "aarch64-linux" ];
   };
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  # Reduce local build parallelism to avoid thrashing during transition
+  nix.settings.max-jobs = 2;
   networking = {
     hostName = "nixos"; # Define your hostname.
     networkmanager.enable = true;
@@ -57,42 +62,37 @@
   };
 
   # Enable the X11 windowing system and GNOME Desktop Environment.
-  services = {
-    xserver = {
-      enable = true;
-      displayManager = {
-        gdm.enable = true;
-        autoLogin = {
-          enable = true;
-          user = "parallaxis";
-        };
-      };
-      desktopManager.gnome.enable = true;
-      xkb = {
-        layout = "us";
-        variant = "";
-      };
-    };
-    printing.enable = true;
-  };
+  # Keep GNOME desktop config commented while in minimal mode
+  # services = {
+  #   xserver = {
+  #     enable = true;
+  #     displayManager = {
+  #       gdm.enable = true;
+  #       autoLogin = {
+  #         enable = true;
+  #         user = "parallaxis";
+  #       };
+  #     };
+  #     desktopManager.gnome.enable = true;
+  #     xkb = {
+  #       layout = "us";
+  #       variant = "";
+  #     };
+  #   };
+  #   printing.enable = true;
+  # };
 
   # Configure keymap in X11 moved into services.xserver above
 
-  # Enable sound with pipewire.
-  hardware.pulseaudio.enable = false;
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-    # If you want to use JACK applications, uncomment this
-    #jack.enable = true;
-
-    # use the example session manager (no others are packaged yet so this is enabled by default,
-    # no need to redefine it in your config for now)
-    #media-session.enable = true;
-  };
+  # Sound stack (disabled in minimal profile)
+  # hardware.pulseaudio.enable = false;
+  # security.rtkit.enable = true;
+  # services.pipewire = {
+  #   enable = true;
+  #   alsa.enable = true;
+  #   alsa.support32Bit = true;
+  #   pulse.enable = true;
+  # };
 
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
@@ -106,20 +106,21 @@
       #  thunderbird
     ];
   };
-  programs.steam = {
-    enable = true;
-    remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
-    dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
-    localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
-  };
+  # Steam (disabled in minimal profile)
+  # programs.steam = {
+  #   enable = true;
+  #   remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
+  #   dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
+  #   localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
+  # };
   # Enable automatic login moved into services set above
 
   # Workaround for GNOME autologin: https://github.com/NixOS/nixpkgs/issues/103746#issuecomment-945091229
   systemd.services."getty@tty1".enable = false;
   systemd.services."autovt@tty1".enable = false;
 
-  # Install firefox.
-  programs.firefox.enable = true;
+  # Install firefox (desktop profile only)
+  # programs.firefox.enable = true;
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
@@ -127,18 +128,12 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-    #  wget
     neovim
-    brave
-    _1password-gui
-    _1password-cli
     git
     curl
     wget
     ripgrep
     fzf
-    mcp-hub.packages.${system}.default
   ];
 
   # Some programs need SUID wrappers, can be configured further or are

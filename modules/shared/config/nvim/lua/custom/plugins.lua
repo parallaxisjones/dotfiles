@@ -131,74 +131,7 @@ local plugins = {
     },
   },
 
-  -- MCP Hub (mcp-hub) configuration per official docs
-  {
-    "ravitemer/mcphub.nvim",
-    dependencies = { "nvim-lua/plenary.nvim" },
-    build = "npm install -g mcp-hub@latest",
-    config = function()
-      local config_path = vim.fn.expand("~/.config/mcphub/servers.json")
-      local mcp_cmd     = vim.fn.exepath("mcp-hub")
-      if mcp_cmd == "" then
-        error("[mcphub.nvim] mcp-hub not found; please install via `npm install -g mcp-hub@latest` or adjust cmd manually.")
-      end
-
-      require("mcphub").setup({
-        -- core binary options
-        config             = config_path,
-        port               = 37373,
-        shutdown_delay     = 60 * 10 * 1000,   -- 10 minutes
-        use_bundled_binary = false,
-        mcp_request_timeout = 60000,
-
-        -- chat-plugin integration
-        auto_approve           = false,
-        auto_toggle_mcp_servers = true,
-        extensions = {
-          avante = {
-            enabled             = true,
-            make_slash_commands = true,
-          },
-        },
-
-        -- plugin-specific options
-        native_servers = {},
-        ui = {
-          window = {
-            width    = 0.85,
-            height   = 0.85,
-            align    = "center",
-            relative = "editor",
-            zindex   = 50,
-            border   = "rounded",
-          },
-          wo = {
-            winhl = "Normal:MCPHubNormal,FloatBorder:MCPHubBorder",
-          },
-        },
-
-        -- lifecycle hooks
-        on_ready = function(hub)
-          vim.notify("MCP Hub ready on port " .. hub.port, vim.log.levels.INFO)
-        end,
-        on_error = function(err)
-          vim.notify("MCP Hub error: " .. err, vim.log.levels.ERROR)
-        end,
-
-        -- logging
-        log = {
-          level     = vim.log.levels.WARN,
-          to_file   = false,
-          file_path = nil,
-          prefix    = "MCPHub",
-        },
-
-        -- use the global binary
-        cmd = mcp_cmd,
-        -- plugin will auto-generate args from the above options
-      })
-    end,
-  },
+  -- mcp-hub removed
 
   {
     "kevinhwang91/promise-async",

@@ -1,10 +1,7 @@
 # overlays/nodejs-20-override.nix
-_: prev: rec {
-  # Rebind pkgs.nodejs to the nodejs_20 attribute
+_: prev:
+if prev.stdenv.isDarwin then rec {
+  # On Darwin, pin NodeJS to 20 for compatibility with local tooling
   nodejs = prev.nodejs_20;
-
-  # Now override nodePackages so it all uses that same nodejs
-  nodePackages = prev.nodePackages.override {
-    inherit nodejs;
-  };
-}
+  nodePackages = prev.nodePackages.override { inherit nodejs; };
+} else { }

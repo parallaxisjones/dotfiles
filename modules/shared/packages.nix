@@ -13,7 +13,7 @@ in
 with pkgs; [
   # General packages for development and system management
   act
-  alacritty
+  # alacritty                   # desktop-dev profile only
   aspell
   aspellDicts.en
   bash-completion
@@ -36,36 +36,36 @@ with pkgs; [
   libiconv
   htmlq
   # BEAM
-  gleam
-  elixir
-  erlang
-  zig
-  docker-compose
+  # gleam                       # desktop-dev
+  # elixir                      # desktop-dev
+  # erlang                      # desktop-dev
+  # zig                         # desktop-dev
+  # docker-compose              # desktop-dev
   # Encryption and security tools
-  _1password-cli
+  # _1password-cli              # desktop-dev
   age
   age-plugin-yubikey
   gnupg
   libfido2
   pkg-config
   # Cloud-related tools and SDKs
-  flyctl
-  google-cloud-sdk
-  go
-  gopls
-  ngrok
-  ssm-session-manager-plugin
-  terraform
-  terraform-ls
-  tflint
+  # flyctl                      # desktop-dev
+  # google-cloud-sdk            # desktop-dev
+  # go                          # desktop-dev
+  # gopls                       # desktop-dev
+  # ngrok                       # desktop-dev
+  # ssm-session-manager-plugin  # desktop-dev
+  # terraform                   # desktop-dev
+  # terraform-ls                # desktop-dev
+  # tflint                      # desktop-dev
   neovim
   zellij
   zsh
   # Media-related packages
-  emacs-all-the-icons-fonts
-  imagemagick
-  dejavu_fonts
-  ffmpeg
+  # emacs-all-the-icons-fonts   # desktop-dev
+  # imagemagick                 # desktop-dev
+  # dejavu_fonts                # desktop-dev
+  # ffmpeg                      # desktop-dev
   fd
   font-awesome
   glow
@@ -79,10 +79,10 @@ with pkgs; [
   cargo
   # Node.js development tools
   fzf
-  nodePackages.live-server
-  nodePackages.nodemon
-  nodePackages.prettier
-  nodejs
+  # nodePackages.live-server    # desktop-dev
+  # nodePackages.nodemon       # desktop-dev
+  # nodePackages.prettier      # desktop-dev
+  # nodejs                     # desktop-dev
 
   # Source code management, Git, GitHub tools
   gh
@@ -93,10 +93,10 @@ with pkgs; [
   hunspell
   iftop
   jetbrains-mono
-  jetbrains.phpstorm
+  # jetbrains.phpstorm          # desktop-dev
   jq
   ripgrep
-  slack
+  # slack                       # desktop-dev
   tree
   tmux
   unrar

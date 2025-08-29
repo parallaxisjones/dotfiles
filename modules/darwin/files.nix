@@ -1,12 +1,5 @@
-{ user, config, ... }:
-
-let
-  xdg_configHome = "${config.users.users.${user}.home}/.config";
-
-  inherit (config.users.users.${user}) home;
-  mcpServers = import ../shared/mcp-servers.nix { inherit home; };
-in
+_:
 {
   # Other file definitions can go here...
-  "${xdg_configHome}/mcphub/servers.json".text = builtins.toJSON { inherit mcpServers; };
+  # mcp-hub removed
 }
