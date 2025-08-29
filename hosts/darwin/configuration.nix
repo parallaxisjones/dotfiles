@@ -31,6 +31,13 @@ in
         "root"
         "pjones"
       ];
+
+      # Remote builder configuration (controller side)
+      # - Use a conservative single-job builder entry to avoid OOM on the server
+      # - Force local max-jobs to 0 to offload builds
+      builders-use-substitutes = true;
+      max-jobs = 0;
+      builders = "ssh-ng://parallaxis@nixos x86_64-linux / 1 1";
     };
     gc = {
       automatic = true;
@@ -88,8 +95,8 @@ in
     '';
   };
 
-  # Uncomment to auto-upgrade the nix-daemon, etc.
-  # services.nix-daemon.enable = true;
+  # Ensure nix-daemon is enabled for multi-user builds and remote builders
+  services.nix-daemon.enable = true;
   # services.karabiner-elements.enable = true;
 
   # Enable experimental flakes support
