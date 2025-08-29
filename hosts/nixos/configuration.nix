@@ -34,6 +34,7 @@
     cores = 2;
     # Keep features minimal for this host
     system-features = [ "kvm" ];
+    extra-platforms = [ "aarch64-linux" "i686-linux" ];
   };
   networking = {
     hostName = "nixos"; # Define your hostname.
