@@ -30,8 +30,8 @@
   nix.settings = {
     experimental-features = [ "nix-command" "flakes" ];
     # Constrain parallelism to avoid OOM under load
-    max-jobs = 2;
-    cores = 2;
+    max-jobs = 4;
+    cores = 6;
     # Keep features minimal for this host
     system-features = [ "kvm" ];
     extra-platforms = [ "aarch64-linux" "i686-linux" ];

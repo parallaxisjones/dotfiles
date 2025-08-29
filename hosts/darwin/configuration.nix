@@ -100,7 +100,7 @@ in
   # Provide the remote builders file referenced above
   environment.etc."nix/machines".text = ''
     # host                         systems                               ssh-key  max-jobs speed  features
-    ssh-ng://parallaxis@nixos      x86_64-linux,i686-linux,aarch64-linux  -        1        1
+    ssh-ng://parallaxis@nixos      x86_64-linux,i686-linux,aarch64-linux  -        4        1
   '';
   # services.karabiner-elements.enable = true;
 
