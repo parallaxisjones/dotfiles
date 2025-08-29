@@ -24,8 +24,6 @@ with pkgs; [
   discord
   hexchat
   fractal
-  cypress
-  chromedriver
   direnv
   rofi
   rofi-calc
@@ -50,7 +48,6 @@ with pkgs; [
   xdg-utils
   yad
   xdotool
-  google-chrome
   zathura
   spotify
   immersed

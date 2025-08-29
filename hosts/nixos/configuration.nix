@@ -27,9 +27,15 @@
     # machine from desktop to server. Re-enable when needed.
     # binfmt.emulatedSystems = [ "aarch64-linux" ];
   };
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
-  # Reduce local build parallelism to avoid thrashing during transition
-  nix.settings.max-jobs = 2;
+  nix.settings = {
+    experimental-features = [ "nix-command" "flakes" ];
+    # Constrain parallelism to avoid OOM under load
+    max-jobs = 4;
+    cores = 6;
+    # Keep features minimal for this host
+    system-features = [ "kvm" ];
+    extra-platforms = [ "aarch64-linux" "i686-linux" ];
+  };
   networking = {
     hostName = "nixos"; # Define your hostname.
     networkmanager.enable = true;

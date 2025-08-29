@@ -1,4 +1,4 @@
-{ config, pkgs, home-manager, ... }:
+{ config, pkgs, home-manager, lib, ... }:
 
 let
   # Pull in nix-darwin’s Home Manager engine (provided by the home-manager flake input)
@@ -31,6 +31,13 @@ in
         "root"
         "pjones"
       ];
+
+      # Remote builder configuration (controller side)
+      # - Use a conservative single-job builder entry to avoid OOM on the server
+      # - Force local max-jobs to 0 to offload builds
+      builders-use-substitutes = true;
+      max-jobs = 0;
+      builders = lib.mkForce "@/etc/nix/machines";
     };
     gc = {
       automatic = true;
@@ -88,8 +95,13 @@ in
     '';
   };
 
-  # Uncomment to auto-upgrade the nix-daemon, etc.
-  # services.nix-daemon.enable = true;
+  # nix-darwin manages nix-daemon automatically when nix is enabled
+
+  # Provide the remote builders file referenced above
+  environment.etc."nix/machines".text = ''
+    # host                         systems                               ssh-key  max-jobs speed  features
+    ssh-ng://parallaxis@nixos      x86_64-linux,i686-linux,aarch64-linux  -        4        1
+  '';
   # services.karabiner-elements.enable = true;
 
   # Enable experimental flakes support
