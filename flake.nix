@@ -158,7 +158,7 @@
                   users.${user} = import ./modules/nixos/home-manager.nix;
                 };
               })
-              ({ pkgs, ... }: {
+              (_: {
                 # Keep overlays available but avoid installing large Rust toolchains
                 # by default on NixOS hosts to reduce build time and memory pressure.
                 nixpkgs.overlays = [ fenix.overlays.default ] ++ overlays;

@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ pkgs, lib, ... }:
 {
   # Minimal, headless-friendly profile for stability during transition.
   services = {
