@@ -30,8 +30,8 @@
   nix.settings = {
     experimental-features = [ "nix-command" "flakes" ];
     # Constrain parallelism to avoid OOM under load
-    max-jobs = 4;
-    cores = 6;
+    max-jobs = 2;
+    cores = 2;
     # Keep features minimal for this host
     system-features = [ "kvm" ];
     extra-platforms = [ "aarch64-linux" "i686-linux" ];
@@ -107,7 +107,7 @@
   users.users.parallaxis = {
     isNormalUser = true;
     description = "Parker Jones";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "docker" ];
     packages = with pkgs; [
       #  thunderbird
     ];
@@ -159,6 +159,22 @@
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
+
+  # Enable Docker daemon and install docker
+  virtualisation = {
+    docker = {
+      enable = true;
+      logDriver = "json-file";
+    };
+  };
+
+  # Add swap via zram and enable systemd-oomd for better stability under memory pressure
+  zramSwap = {
+    enable = true;
+    memoryPercent = 50;
+    priority = 100;
+  };
+  systemd.oomd.enable = true;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
