@@ -39,7 +39,7 @@
   networking = {
     hostName = "nixos"; # Define your hostname.
     networkmanager.enable = true;
-    firewall.allowedTCPPorts = [ 24800 80 443 22 ];
+    firewall.allowedTCPPorts = [ 24800 80 443 22 8081 ];
   };
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
