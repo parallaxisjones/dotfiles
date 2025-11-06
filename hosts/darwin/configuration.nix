@@ -58,6 +58,7 @@ in
       "dev-core-ftp.dsco.io" = "127.0.0.1";
       "dev-core-static.dsco.io" = "127.0.0.1";
       "dev-core-images.dsco.io" = "127.0.0.1";
+      "nixos.attlocal.net" = "192.168.1.169";
     };
     # settings = {
     #   "bind-interfaces" = true;
