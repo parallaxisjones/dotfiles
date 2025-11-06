@@ -125,8 +125,12 @@
   # optional: add a few common libs if you run into missing .so’s
   programs.nix-ld.libraries = with pkgs; [ stdenv.cc.cc.lib zlib openssl ];
   # Workaround for GNOME autologin: https://github.com/NixOS/nixpkgs/issues/103746#issuecomment-945091229
-  systemd.services."getty@tty1".enable = false;
-  systemd.services."autovt@tty1".enable = false;
+  systemd = {
+    services = {
+      "getty@tty1".enabled = false;
+      "autovt@tty1".enable = false;
+    };
+  };
 
   # Install firefox (desktop profile only)
   # programs.firefox.enable = true;
