@@ -1,4 +1,4 @@
-{ agenix, secrets, ... }:
+{ secrets, ... }:
 
 let
   user = "pjones";

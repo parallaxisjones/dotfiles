@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   imports =
@@ -30,8 +30,8 @@
   nix.settings = {
     experimental-features = [ "nix-command" "flakes" ];
     # Constrain parallelism to avoid OOM under load
-    max-jobs = 4;
-    cores = 6;
+    max-jobs = 2;
+    cores = 2;
     # Keep features minimal for this host
     system-features = [ "kvm" ];
     extra-platforms = [ "aarch64-linux" "i686-linux" ];
@@ -39,7 +39,7 @@
   networking = {
     hostName = "nixos"; # Define your hostname.
     networkmanager.enable = true;
-    firewall.allowedTCPPorts = [ 24800 80 443 22 ];
+    firewall.allowedTCPPorts = [ 24800 80 443 22 8081 ];
   };
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
@@ -107,7 +107,7 @@
   users.users.parallaxis = {
     isNormalUser = true;
     description = "Parker Jones";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "docker" ];
     packages = with pkgs; [
       #  thunderbird
     ];
@@ -120,10 +120,17 @@
   #   localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
   # };
   # Enable automatic login moved into services set above
+  programs.nix-ld.enable = true;
 
+  # optional: add a few common libs if you run into missing .so’s
+  programs.nix-ld.libraries = with pkgs; [ stdenv.cc.cc.lib zlib openssl ];
   # Workaround for GNOME autologin: https://github.com/NixOS/nixpkgs/issues/103746#issuecomment-945091229
-  systemd.services."getty@tty1".enable = false;
-  systemd.services."autovt@tty1".enable = false;
+  systemd = {
+    services = {
+      "getty@tty1".enable = false;
+      "autovt@tty1".enable = false;
+    };
+  };
 
   # Install firefox (desktop profile only)
   # programs.firefox.enable = true;
@@ -159,6 +166,22 @@
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
+
+  # Enable Docker daemon and install docker
+  virtualisation = {
+    docker = {
+      enable = true;
+      logDriver = "json-file";
+    };
+  };
+
+  # Add swap via zram and enable systemd-oomd for better stability under memory pressure
+  zramSwap = {
+    enable = true;
+    memoryPercent = 50;
+    priority = 100;
+  };
+  systemd.oomd.enable = true;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
