@@ -120,7 +120,10 @@
   #   localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
   # };
   # Enable automatic login moved into services set above
+  programs.nix-ld.enable = true;
 
+  # optional: add a few common libs if you run into missing .so’s
+  programs.nix-ld.libraries = with pkgs; [ stdenv.cc.cc.lib zlib openssl ];
   # Workaround for GNOME autologin: https://github.com/NixOS/nixpkgs/issues/103746#issuecomment-945091229
   systemd.services."getty@tty1".enable = false;
   systemd.services."autovt@tty1".enable = false;
