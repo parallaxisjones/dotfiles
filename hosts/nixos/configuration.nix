@@ -40,6 +40,10 @@
     hostName = "nixos"; # Define your hostname.
     networkmanager.enable = true;
     firewall.allowedTCPPorts = [ 24800 80 443 22 8081 ];
+    # Allow Tailscale UDP port
+    firewall.allowedUDPPorts = [ 41641 ];
+    # Optionally trust the Tailscale interface
+    firewall.trustedInterfaces = [ "tailscale0" ];
   };
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
@@ -161,6 +165,9 @@
 
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
+
+  # Enable Tailscale VPN
+  services.tailscale.enable = true;
 
   # Open ports in the firewall moved into networking set above
   # networking.firewall.allowedUDPPorts = [ ... ];

@@ -21,6 +21,7 @@ _:
   # Utility Tools
   "appcleaner"
   "syncthing"
+  "tailscale"
 
   # Entertainment Tools
   # "steam"
