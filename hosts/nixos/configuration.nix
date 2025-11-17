@@ -193,6 +193,15 @@
   };
   systemd.oomd.enable = true;
 
+  # Make zram setup service not fail activation if device is already in use
+  # This can happen if zram0 was configured in a previous boot or is already active
+  systemd.services."systemd-zram-setup@zram0" = {
+    serviceConfig = {
+      # Treat exit code 1 (device busy) as success since zram might already be configured
+      SuccessExitStatus = [ "0" "1" ];
+    };
+  };
+
   # Ensure the secrets directory exists before mounts try to use it
   systemd.tmpfiles.rules = [
     "d /etc/nixos/secrets 0755 root root -"

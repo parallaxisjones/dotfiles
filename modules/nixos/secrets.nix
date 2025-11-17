@@ -6,24 +6,9 @@
     ];
 
     secrets = {
-      "github-ssh-key" = {
-        symlink = false;
-        path = "/home/${user}/.ssh/id_github";
-        file = "${secrets}/github-ssh-key.age";
-        mode = "600";
-        owner = user;
-        group = "wheel";
-      };
-
-      "github-signing-key" = {
-        symlink = false;
-        path = "/home/${user}/.ssh/pgp_github.key";
-        file = "${secrets}/github-signing-key.age";
-        mode = "600";
-        owner = user;
-        group = "wheel";
-      };
-
+      # GitHub keys removed - not needed on this server
+      # If needed in the future, add the encrypted files to the secrets repo first
+      
       "smb-credentials" = {
         symlink = false;
         path = "/etc/nixos/secrets/smb-credentials";
