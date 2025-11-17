@@ -1,8 +1,8 @@
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
+# and in the NixOS manual (accessible by running 'nixos-help').
 
-{ pkgs, ... }:
+{ pkgs, agenix, secrets, user, config, ... }:
 
 {
   imports =
@@ -12,6 +12,9 @@
       # Role-based profiles (pick minimal for now)
       ./profiles/minimal.nix
       # ./profiles/desktop-gnome.nix
+      # Secrets management with agenix
+      agenix.nixosModules.default
+      ../../modules/nixos/secrets.nix
     ];
 
   # Bootloader.
@@ -189,6 +192,24 @@
     priority = 100;
   };
   systemd.oomd.enable = true;
+
+  # Mount Synology NAS Documents share via SMB/CIFS
+  fileSystems."/mnt/nas/documents" = let
+    userUid = toString config.users.users.${user}.uid;
+    userGid = toString config.users.users.${user}.gid;
+  in {
+    device = "//nasology.tail9fed5f.ts.net/volume1/Documents";
+    fsType = "cifs";
+    options = [
+      "nofail"
+      "_netdev"
+      "credentials=${config.age.secrets.smb-credentials.path}"
+      "uid=${userUid}"
+      "gid=${userGid}"
+      "file_mode=0664"
+      "dir_mode=0775"
+    ];
+  };
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

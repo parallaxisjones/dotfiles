@@ -23,6 +23,15 @@
         owner = user;
         group = "wheel";
       };
+
+      "smb-credentials" = {
+        symlink = false;
+        path = "/etc/nixos/secrets/smb-credentials";
+        file = "${secrets}/smb-credentials.age";
+        mode = "600";
+        owner = "root";
+        group = "root";
+      };
     };
   };
 
