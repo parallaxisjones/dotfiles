@@ -1,29 +1,23 @@
-{ secrets, user, ... }:
-{
+{ lib, secrets ? null, user, ... }:
+
+lib.mkIf (secrets != null) {
   age = {
     identityPaths = [
       "/home/${user}/.ssh/id_ed25519"
     ];
 
     secrets = {
-      "github-ssh-key" = {
-        symlink = false;
-        path = "/home/${user}/.ssh/id_github";
-        file = "${secrets}/github-ssh-key.age";
-        mode = "600";
-        owner = user;
-        group = "wheel";
-      };
+      # GitHub keys removed - not needed on this server
+      # If needed in the future, add the encrypted files to the secrets repo first
 
-      "github-signing-key" = {
+      "smb-credentials" = {
         symlink = false;
-        path = "/home/${user}/.ssh/pgp_github.key";
-        file = "${secrets}/github-signing-key.age";
+        path = "/etc/nixos/secrets/smb-credentials";
+        file = "${secrets}/smb-credentials.age";
         mode = "600";
-        owner = user;
-        group = "wheel";
+        owner = "root";
+        group = "root";
       };
     };
   };
-
 }

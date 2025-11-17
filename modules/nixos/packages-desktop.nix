@@ -5,7 +5,6 @@ with pkgs; [
   _1password-gui
   yubikey-agent
   keepassxc
-  barrier
   appimage-run
   gnumake
   cmake

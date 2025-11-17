@@ -9,7 +9,6 @@ _:
   "ngrok"
   "postico"
   "visual-studio-code"
-  "barrier"
   # "wireshark"
   # Communication Tools
   "discord"

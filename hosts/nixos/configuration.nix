@@ -1,8 +1,8 @@
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
+# and in the NixOS manual (accessible by running 'nixos-help').
 
-{ pkgs, ... }:
+{ pkgs, agenix, ... }:
 
 {
   imports =
@@ -12,6 +12,11 @@
       # Role-based profiles (pick minimal for now)
       ./profiles/minimal.nix
       # ./profiles/desktop-gnome.nix
+      # Secrets management with agenix
+      agenix.nixosModules.default
+      ../../modules/nixos/secrets.nix
+      # NAS SMB/CIFS mounts
+      ../../modules/nixos/nas-mounts.nix
     ];
 
   # Bootloader.
@@ -39,11 +44,13 @@
   networking = {
     hostName = "nixos"; # Define your hostname.
     networkmanager.enable = true;
-    firewall.allowedTCPPorts = [ 24800 80 443 22 8081 ];
-    # Allow Tailscale UDP port
-    firewall.allowedUDPPorts = [ 41641 ];
-    # Optionally trust the Tailscale interface
-    firewall.trustedInterfaces = [ "tailscale0" ];
+    firewall = {
+      allowedTCPPorts = [ 24800 80 443 22 8081 ];
+      # Allow Tailscale UDP port
+      allowedUDPPorts = [ 41641 ];
+      # Optionally trust the Tailscale interface
+      trustedInterfaces = [ "tailscale0" ];
+    };
   };
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
@@ -189,6 +196,20 @@
     priority = 100;
   };
   systemd.oomd.enable = true;
+
+  # Make zram setup service not fail activation if device is already in use
+  # This can happen if zram0 was configured in a previous boot or is already active
+  systemd.services."systemd-zram-setup@zram0" = {
+    serviceConfig = {
+      # Treat exit code 1 (device busy) as success since zram might already be configured
+      SuccessExitStatus = [ "0" "1" ];
+    };
+  };
+
+  # Ensure the secrets directory exists before mounts try to use it
+  systemd.tmpfiles.rules = [
+    "d /etc/nixos/secrets 0755 root root -"
+  ];
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
