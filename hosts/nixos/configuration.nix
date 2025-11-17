@@ -209,15 +209,16 @@
         userUid = toString config.users.users.${user}.uid;
         primaryGroup = config.users.users.${user}.group or user;
         userGid = toString config.users.groups.${primaryGroup}.gid;
-      in [
-        "nofail"
-        "_netdev"
-        "credentials=${config.age.secrets.smb-credentials.path}"
-        "uid=${userUid}"
-        "gid=${userGid}"
-        "file_mode=0664"
-        "dir_mode=0775"
-      ];
+        opts = [
+          "nofail"
+          "_netdev"
+          "credentials=${config.age.secrets.smb-credentials.path}"
+          "uid=${userUid}"
+          "gid=${userGid}"
+          "file_mode=0664"
+          "dir_mode=0775"
+        ];
+      in builtins.concatStringsSep "," opts;
       # Wait for agenix to decrypt secrets before mounting
       after = [ "agenix-secrets.service" ];
       requires = [ "agenix-secrets.service" ];
