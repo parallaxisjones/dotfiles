@@ -196,7 +196,9 @@
   # Mount Synology NAS Documents share via SMB/CIFS
   fileSystems."/mnt/nas/documents" = let
     userUid = toString config.users.users.${user}.uid;
-    userGid = toString config.users.users.${user}.gid;
+    # Get primary group GID - default to user's name if group not explicitly set
+    primaryGroup = config.users.users.${user}.group or user;
+    userGid = toString config.users.groups.${primaryGroup}.gid;
   in {
     device = "//nasology.tail9fed5f.ts.net/volume1/Documents";
     fsType = "cifs";
