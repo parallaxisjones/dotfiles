@@ -21,7 +21,7 @@ with pkgs; [
   btop
   coreutils
   difftastic
-  du-dust
+  dust
   gcc
   git-filter-repo
   killall
