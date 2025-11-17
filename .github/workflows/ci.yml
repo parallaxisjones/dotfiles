@@ -101,7 +101,7 @@ jobs:
         uses: DeterminateSystems/nix-installer-action@main
 
       - name: Install Cachix
-        uses: cachix/cachix-action@v14
+        uses: cachix/cachix-action@v16
         with:
           name: parallaxisjones
           authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
