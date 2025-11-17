@@ -201,12 +201,13 @@
   # Mount Synology NAS Documents share via SMB/CIFS
   # Using fileSystems (not systemd.mounts) so it runs after activation scripts
   # which is when agenix decrypts secrets
+  # Note: SMB share name is just "Documents", not "volume1/Documents" (volume1 is internal)
   fileSystems."/mnt/nas/documents" = let
     userUid = toString config.users.users.${user}.uid;
     primaryGroup = config.users.users.${user}.group or user;
     userGid = toString config.users.groups.${primaryGroup}.gid;
   in {
-    device = "//nasology.tail9fed5f.ts.net/volume1/Documents";
+    device = "//nasology.tail9fed5f.ts.net/Documents";
     fsType = "cifs";
     options = [
       "nofail"
