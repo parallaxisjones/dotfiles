@@ -8,7 +8,7 @@
     secrets = {
       # GitHub keys removed - not needed on this server
       # If needed in the future, add the encrypted files to the secrets repo first
-      
+
       "smb-credentials" = {
         symlink = false;
         path = "/etc/nixos/secrets/smb-credentials";
