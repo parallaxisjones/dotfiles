@@ -44,11 +44,13 @@
   networking = {
     hostName = "nixos"; # Define your hostname.
     networkmanager.enable = true;
-    firewall.allowedTCPPorts = [ 24800 80 443 22 8081 ];
-    # Allow Tailscale UDP port
-    firewall.allowedUDPPorts = [ 41641 ];
-    # Optionally trust the Tailscale interface
-    firewall.trustedInterfaces = [ "tailscale0" ];
+    firewall = {
+      allowedTCPPorts = [ 24800 80 443 22 8081 ];
+      # Allow Tailscale UDP port
+      allowedUDPPorts = [ 41641 ];
+      # Optionally trust the Tailscale interface
+      trustedInterfaces = [ "tailscale0" ];
+    };
   };
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
