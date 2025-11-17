@@ -1,6 +1,6 @@
-{ config, user, ... }:
+{ config, lib, user, ... }:
 
-{
+lib.mkIf (config.age.secrets ? "smb-credentials") {
   # Mount Synology NAS shares via SMB/CIFS
   # Using fileSystems (not systemd.mounts) so it runs after activation scripts
   # which is when agenix decrypts secrets

@@ -71,16 +71,22 @@ jobs:
 
       - name: Flake checks
         run: |
-          nix --extra-experimental-features 'nix-command flakes' flake check --all-systems
+          # Override secrets input with empty directory since CI can't access private repo
+          # The modules handle missing secrets gracefully with lib.mkIf
+          mkdir -p /tmp/empty-secrets
+          nix --extra-experimental-features 'nix-command flakes' flake check --all-systems \
+            --override-input secrets path:/tmp/empty-secrets
 
       - name: Evaluate Darwin and NixOS systems
         run: |
           set -euo pipefail
-          nix --extra-experimental-features 'nix-command flakes' eval .#darwinConfigurations.aarch64-darwin.system
-          nix --extra-experimental-features 'nix-command flakes' eval .#darwinConfigurations.x86_64-darwin.system
-          nix --extra-experimental-features 'nix-command flakes' eval .#nixosConfigurations.x86_64-linux.config.system.build.toplevel
-          nix --extra-experimental-features 'nix-command flakes' eval .#nixosConfigurations.aarch64-linux.config.system.build.toplevel
-          nix --extra-experimental-features 'nix-command flakes' eval .#nixosConfigurations.helios64.config.system.build.toplevel
+          # Override secrets input with empty directory since CI can't access private repo
+          mkdir -p /tmp/empty-secrets
+          nix --extra-experimental-features 'nix-command flakes' eval .#darwinConfigurations.aarch64-darwin.system --override-input secrets path:/tmp/empty-secrets
+          nix --extra-experimental-features 'nix-command flakes' eval .#darwinConfigurations.x86_64-darwin.system --override-input secrets path:/tmp/empty-secrets
+          nix --extra-experimental-features 'nix-command flakes' eval .#nixosConfigurations.x86_64-linux.config.system.build.toplevel --override-input secrets path:/tmp/empty-secrets
+          nix --extra-experimental-features 'nix-command flakes' eval .#nixosConfigurations.aarch64-linux.config.system.build.toplevel --override-input secrets path:/tmp/empty-secrets
+          nix --extra-experimental-features 'nix-command flakes' eval .#nixosConfigurations.helios64.config.system.build.toplevel --override-input secrets path:/tmp/empty-secrets
 
   cachix-push:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'

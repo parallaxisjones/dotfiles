@@ -1,5 +1,6 @@
-{ secrets, user, ... }:
-{
+{ lib, secrets ? null, user, ... }:
+
+lib.mkIf (secrets != null) {
   age = {
     identityPaths = [
       "/home/${user}/.ssh/id_ed25519"
@@ -19,5 +20,4 @@
       };
     };
   };
-
 }
