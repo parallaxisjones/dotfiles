@@ -199,31 +199,25 @@
   ];
 
   # Mount Synology NAS Documents share via SMB/CIFS
-  # Using systemd.mounts for better dependency control with agenix secrets
-  systemd.mounts = [
-    {
-      where = "/mnt/nas/documents";
-      what = "//nasology.tail9fed5f.ts.net/volume1/Documents";
-      type = "cifs";
-      options = let
-        userUid = toString config.users.users.${user}.uid;
-        primaryGroup = config.users.users.${user}.group or user;
-        userGid = toString config.users.groups.${primaryGroup}.gid;
-        opts = [
-          "nofail"
-          "_netdev"
-          "credentials=${config.age.secrets.smb-credentials.path}"
-          "uid=${userUid}"
-          "gid=${userGid}"
-          "file_mode=0664"
-          "dir_mode=0775"
-        ];
-      in builtins.concatStringsSep "," opts;
-      # Wait for agenix to decrypt secrets before mounting
-      after = [ "agenix-secrets.service" ];
-      requires = [ "agenix-secrets.service" ];
-    }
-  ];
+  # Using fileSystems (not systemd.mounts) so it runs after activation scripts
+  # which is when agenix decrypts secrets
+  fileSystems."/mnt/nas/documents" = let
+    userUid = toString config.users.users.${user}.uid;
+    primaryGroup = config.users.users.${user}.group or user;
+    userGid = toString config.users.groups.${primaryGroup}.gid;
+  in {
+    device = "//nasology.tail9fed5f.ts.net/volume1/Documents";
+    fsType = "cifs";
+    options = [
+      "nofail"
+      "_netdev"
+      "credentials=${config.age.secrets.smb-credentials.path}"
+      "uid=${userUid}"
+      "gid=${userGid}"
+      "file_mode=0664"
+      "dir_mode=0775"
+    ];
+  };
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

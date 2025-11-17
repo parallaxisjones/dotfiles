@@ -33,7 +33,7 @@
     };
     # mcp-hub removed
     secrets = {
-      url = "https://git@github.com/parallaxisjones/nix-secrets.git?ref=main";
+      url = "git+ssh://git@github.com/parallaxisjones/nix-secrets.git";
       flake = false;
     };
   };
