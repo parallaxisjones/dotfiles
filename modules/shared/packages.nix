@@ -73,7 +73,7 @@ with pkgs; [
   jpegoptim
   meslo-lgs-nf
   noto-fonts
-  noto-fonts-emoji
+  noto-fonts-color-emoji
   pngquant
   cheat
   cargo
