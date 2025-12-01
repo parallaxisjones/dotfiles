@@ -23,7 +23,7 @@ jobs:
 
       - name: Update flake.lock and open PR
         id: update
-        uses: DeterminateSystems/update-flake-lock@v24
+        uses: DeterminateSystems/update-flake-lock@v28
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-msg: 'chore: update flake.lock'
