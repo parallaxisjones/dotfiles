@@ -58,6 +58,24 @@ in
       export EDITOR="nvim"
       export VISUAL="nvim"
 
+      # Rust/Cargo environment variables for macOS builds
+      ${if pkgs.stdenv.isDarwin then ''
+        # libiconv linking for Rust on macOS
+        export LIBRARY_PATH="${pkgs.libiconv}/lib''${LIBRARY_PATH:+:$LIBRARY_PATH}"
+        export LDFLAGS="-L${pkgs.libiconv}/lib''${LDFLAGS:+ $LDFLAGS}"
+        
+        # Compiler flags for aarch64-darwin
+        export CC="${pkgs.clang}/bin/clang"
+        export CXX="${pkgs.clang}/bin/clang++"
+        ${if pkgs.stdenv.isAarch64 then ''
+          export CFLAGS="-arch arm64''${CFLAGS:+ $CFLAGS}"
+          export CXXFLAGS="-arch arm64''${CXXFLAGS:+ $CXXFLAGS}"
+        '' else ""}
+        
+        # Fix for aws-lc-sys: ensure NEON and crypto extensions are available
+        export RUSTFLAGS="-C link-arg=-L${pkgs.libiconv}/lib -C link-arg=-liconv''${RUSTFLAGS:+ $RUSTFLAGS}"
+      '' else ""}
+
       # Use difftastic, syntax-aware diffing
       # alias diff=difft
 

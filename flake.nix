@@ -181,9 +181,9 @@
       darwinConfigurations = nixpkgs.lib.genAttrs darwinSystems (system:
         darwin.lib.darwinSystem {
           inherit system;
-          specialArgs = inputs // { user = workUser; };
+          specialArgs = inputs // { user = workUser; inherit fenix; };
           modules = [
-            { nixpkgs.overlays = overlays; }
+            { nixpkgs.overlays = [ fenix.overlays.default ] ++ overlays; }
             home-manager.darwinModules.home-manager
             nix-homebrew.darwinModules.nix-homebrew
             {

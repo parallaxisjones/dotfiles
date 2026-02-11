@@ -1,4 +1,4 @@
-{ config, pkgs, lib, agenix, ... }:
+{ config, pkgs, lib, agenix, fenix ? null, ... }:
 
 let
   user = "pjones";
@@ -26,10 +26,26 @@ in
 
   home-manager = {
     useGlobalPkgs = true;
-    users.${user} = { pkgs, config, lib, ... }: {
+    users.${user} = { pkgs, config, lib, ... }: let
+      # Get system from pkgs
+      system = pkgs.system;
+      # Get Rust toolchain from fenix if available
+      rustToolchain = if fenix != null then
+        fenix.packages.${system}.complete.withComponents [
+          "cargo"
+          "clippy"
+          "rustc"
+          "rustfmt"
+          "rust-analyzer"
+          "rust-src"
+        ]
+      else null;
+      basePackages = pkgs.callPackage ./packages.nix { };
+      rustPackages = if rustToolchain != null then [ rustToolchain ] else [];
+    in {
       home = {
         enableNixpkgsReleaseCheck = false;
-        packages = pkgs.callPackage ./packages.nix { };
+        packages = basePackages ++ rustPackages;
         file = lib.mkMerge [
           sharedFiles
           additionalFiles
