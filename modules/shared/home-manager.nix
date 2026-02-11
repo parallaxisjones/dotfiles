@@ -8,11 +8,12 @@ let
 in
 {
 
-  direnv = {
-    enable = true;
-    enableZshIntegration = true;
-    nix-direnv.enable = true;
-  };
+  # Temporarily disabled direnv due to fish build failures on darwin after macOS update
+  # direnv = {
+  #   enable = true;
+  #   enableZshIntegration = true;
+  #   nix-direnv.enable = true;
+  # };
 
   zsh = {
     enable = true;
