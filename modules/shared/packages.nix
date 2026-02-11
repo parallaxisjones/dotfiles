@@ -31,8 +31,7 @@ with pkgs; [
   wget
   zip
   uv
-  rust-analyzer
-  rustfmt
+  # rust-analyzer, rustfmt - removed, now provided by fenix Rust toolchain in darwin home-manager
   libiconv
   htmlq
   # BEAM
@@ -76,7 +75,7 @@ with pkgs; [
   noto-fonts-color-emoji
   pngquant
   cheat
-  cargo
+  # cargo - removed, now provided by fenix Rust toolchain in darwin home-manager
   # Node.js development tools
   fzf
   # nodePackages.live-server    # desktop-dev

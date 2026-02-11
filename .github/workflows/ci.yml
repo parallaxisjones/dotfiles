@@ -108,7 +108,11 @@ jobs:
 
       - name: Build and push x86_64-linux system
         run: |
-          nix build --extra-experimental-features 'nix-command flakes' .#nixosConfigurations.x86_64-linux.config.system.build.toplevel
+          # Override secrets input with empty directory since CI can't access private repo
+          mkdir -p /tmp/empty-secrets
+          nix build --extra-experimental-features 'nix-command flakes' \
+            --override-input secrets path:/tmp/empty-secrets \
+            .#nixosConfigurations.x86_64-linux.config.system.build.toplevel
           cachix push parallaxisjones ./result
 
       - name: Append flake show to PR summary

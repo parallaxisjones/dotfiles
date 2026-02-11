@@ -60,7 +60,8 @@
           darwinBuildInputs = with pkgs; nixpkgs.lib.optionals (nixpkgs.lib.strings.hasSuffix "-darwin" system) [
             libiconv
           ];
-        in {
+        in
+        {
           default = with pkgs; mkShell {
             nativeBuildInputs = with pkgs; [ bashInteractive git age age-plugin-yubikey ];
             shellHook = with pkgs; ''
@@ -74,46 +75,50 @@
               pkg-config
               openssl
             ] ++ darwinBuildInputs;
-            shellHook = let
-              iconvLib = "${pkgs.libiconv}/lib";
-              isDarwin = nixpkgs.lib.strings.hasSuffix "-darwin" system;
-              isAarch64Darwin = system == "aarch64-darwin";
-              # For aarch64-darwin, use -arch arm64 flag for proper compilation
-              # For x86_64-darwin, use standard flags
-              cflagsValue = if isAarch64Darwin then "-arch arm64" else "";
-              darwinEnv = if isDarwin then ''
-                # libiconv linking
-                export LIBRARY_PATH="${iconvLib}''${LIBRARY_PATH:+:$LIBRARY_PATH}"
-                export LDFLAGS="-L${iconvLib}''${LDFLAGS:+ $LDFLAGS}"
+            shellHook =
+              let
+                iconvLib = "${pkgs.libiconv}/lib";
+                isDarwin = nixpkgs.lib.strings.hasSuffix "-darwin" system;
+                isAarch64Darwin = system == "aarch64-darwin";
+                # For aarch64-darwin, use -arch arm64 flag for proper compilation
+                # For x86_64-darwin, use standard flags
+                cflagsValue = if isAarch64Darwin then "-arch arm64" else "";
+                darwinEnv =
+                  if isDarwin then ''
+                    # libiconv linking
+                    export LIBRARY_PATH="${iconvLib}''${LIBRARY_PATH:+:$LIBRARY_PATH}"
+                    export LDFLAGS="-L${iconvLib}''${LDFLAGS:+ $LDFLAGS}"
                 
-                # Compiler flags
-                export CC="${pkgs.clang}/bin/clang"
-                export CXX="${pkgs.clang}/bin/clang++"
-                ${if cflagsValue != "" then ''
-                  export CFLAGS="${cflagsValue}''${CFLAGS:+ $CFLAGS}"
-                  export CXXFLAGS="${cflagsValue}''${CXXFLAGS:+ $CXXFLAGS}"
-                '' else ""}
+                    # Compiler flags
+                    export CC="${pkgs.clang}/bin/clang"
+                    export CXX="${pkgs.clang}/bin/clang++"
+                    ${if cflagsValue != "" then ''
+                      export CFLAGS="${cflagsValue}''${CFLAGS:+ $CFLAGS}"
+                      export CXXFLAGS="${cflagsValue}''${CXXFLAGS:+ $CXXFLAGS}"
+                    '' else ""}
                 
-                # Fix for aws-lc-sys: ensure NEON and crypto extensions are available
-                export RUSTFLAGS="-C link-arg=-L${iconvLib} -C link-arg=-liconv''${RUSTFLAGS:+ $RUSTFLAGS}"
-              '' else "";
-              linuxEnv = if nixpkgs.lib.strings.hasSuffix "-linux" system then ''
-                export LIBRARY_PATH="${pkgs.stdenv.cc.cc.lib}/lib''${LIBRARY_PATH:+:$LIBRARY_PATH}"
-              '' else "";
-            in ''
-              echo "Entering Rust development shell"
-              # Set up Rust environment
-              export CARGO_HOME="$HOME/.cargo"
-              export RUSTUP_HOME="$HOME/.rustup"
+                    # Fix for aws-lc-sys: ensure NEON and crypto extensions are available
+                    export RUSTFLAGS="-C link-arg=-L${iconvLib} -C link-arg=-liconv''${RUSTFLAGS:+ $RUSTFLAGS}"
+                  '' else "";
+                linuxEnv =
+                  if nixpkgs.lib.strings.hasSuffix "-linux" system then ''
+                    export LIBRARY_PATH="${pkgs.stdenv.cc.cc.lib}/lib''${LIBRARY_PATH:+:$LIBRARY_PATH}"
+                  '' else "";
+              in
+              ''
+                echo "Entering Rust development shell"
+                # Set up Rust environment
+                export CARGO_HOME="$HOME/.cargo"
+                export RUSTUP_HOME="$HOME/.rustup"
               
-              ${darwinEnv}
-              ${linuxEnv}
+                ${darwinEnv}
+                ${linuxEnv}
               
-              # Verify Rust toolchain
-              rustc --version
-              cargo --version
-              cargo clippy --version || echo "Note: clippy should be available"
-            '';
+                # Verify Rust toolchain
+                rustc --version
+                cargo --version
+                cargo clippy --version || echo "Note: clippy should be available"
+              '';
           };
           gleam = with pkgs; mkShell {
             name = "gleam-shell";
