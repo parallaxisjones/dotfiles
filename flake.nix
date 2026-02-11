@@ -90,11 +90,15 @@
                     export LDFLAGS="-L${iconvLib}''${LDFLAGS:+ $LDFLAGS}"
                 
                     # Compiler flags
+                    # Use clang (not gcc) for proper Apple Silicon support
                     export CC="${pkgs.clang}/bin/clang"
                     export CXX="${pkgs.clang}/bin/clang++"
                     ${if cflagsValue != "" then ''
-                      export CFLAGS="${cflagsValue}''${CFLAGS:+ $CFLAGS}"
-                      export CXXFLAGS="${cflagsValue}''${CXXFLAGS:+ $CXXFLAGS}"
+                      # Enable ARM64 crypto extensions for aws-lc-sys
+                      # -mcpu=apple-m1 enables NEON and crypto extensions on Apple Silicon
+                      # This ensures aws-lc-sys detects the required CPU features
+                      export CFLAGS="${cflagsValue} -mcpu=apple-m1''${CFLAGS:+ $CFLAGS}"
+                      export CXXFLAGS="${cflagsValue} -mcpu=apple-m1''${CXXFLAGS:+ $CXXFLAGS}"
                     '' else ""}
                 
                     # Fix for aws-lc-sys: ensure NEON and crypto extensions are available
