@@ -8,4 +8,5 @@ shared-packages ++ [
   dockutil
   devenv
   pnpm
+  docker-compose
 ]
