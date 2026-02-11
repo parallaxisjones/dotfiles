@@ -92,8 +92,7 @@ in
     };
     settings = {
       user = {
-        name = name;
-        email = email;
+        inherit name email;
       };
       init.defaultBranch = "main";
       core = {
