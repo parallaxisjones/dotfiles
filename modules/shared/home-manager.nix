@@ -87,12 +87,14 @@ in
   git = {
     enable = true;
     ignores = [ "*.swp" ];
-    userName = name;
-    userEmail = email;
     lfs = {
       enable = true;
     };
-    extraConfig = {
+    settings = {
+      user = {
+        name = name;
+        email = email;
+      };
       init.defaultBranch = "main";
       core = {
         editor = "nvim";
@@ -279,10 +281,7 @@ in
 
   ssh = {
     enable = true;
-    extraConfig = ''
-      # Prefer the regular user-writable file first, then the HM-managed static file
-      UserKnownHostsFile ~/.ssh/known_hosts ~/.ssh/known_hosts_hm
-    '';
+    enableDefaultConfig = false;
     includes = [
       (lib.mkIf pkgs.stdenv.hostPlatform.isLinux
         "/home/${user}/.ssh/config_external"
@@ -292,6 +291,11 @@ in
       )
     ];
     matchBlocks = {
+      "*" = {
+        extraOptions = {
+          UserKnownHostsFile = "~/.ssh/known_hosts ~/.ssh/known_hosts_hm";
+        };
+      };
       "github.com" = {
         identitiesOnly = true;
         identityFile = [

@@ -55,8 +55,15 @@ in
           }
           # Configure Rust/Cargo to find libiconv on macOS and fix aws-lc-sys issues
           # This fixes "library not found for -liconv" errors and aws-lc-sys compilation
+          # Includes known registry config and adds libiconv linking
           {
             ".cargo/config.toml".text = ''
+              # Cargo registries
+              [registries.dsco-cargo]
+              index = "https://dl.cloudsmith.io/HrWnzYbvPYsqmoOd/dsco/cargo/cargo/index.git"
+
+              # macOS libiconv linking configuration
+              # This fixes "library not found for -liconv" errors when building on macOS
               [target.aarch64-apple-darwin]
               rustflags = [
                 "-C", "link-arg=-L${pkgs.libiconv}/lib",
