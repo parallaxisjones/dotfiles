@@ -37,6 +37,31 @@ in
           {
             ".ssh/.keep".text = "";
           }
+          # Configure Rust/Cargo to find libiconv on macOS and fix aws-lc-sys issues
+          # This fixes "library not found for -liconv" errors and aws-lc-sys compilation
+          {
+            ".cargo/config.toml".text = ''
+              [target.aarch64-apple-darwin]
+              rustflags = [
+                "-C", "link-arg=-L${pkgs.libiconv}/lib",
+                "-C", "link-arg=-liconv",
+                "-C", "target-cpu=native"
+              ]
+
+              [target.x86_64-apple-darwin]
+              rustflags = [
+                "-C", "link-arg=-L${pkgs.libiconv}/lib",
+                "-C", "link-arg=-liconv"
+              ]
+
+              # Linux targets (if needed)
+              [target.x86_64-unknown-linux-gnu]
+              rustflags = []
+
+              [target.aarch64-unknown-linux-gnu]
+              rustflags = []
+            '';
+          }
           # ──────────────────────────────────────────────────────────────────────
           # 1) Ensure ~/.cache/nvim/avante/clipboard exists
           {
