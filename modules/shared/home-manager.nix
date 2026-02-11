@@ -70,10 +70,10 @@ in
         export CXX="${pkgs.clang}/bin/clang++"
         ${if pkgs.stdenv.isAarch64 then ''
           # Enable ARM64 crypto extensions for aws-lc-sys
-          # -mcpu=apple-m1 enables NEON and crypto extensions on Apple Silicon
-          # This ensures aws-lc-sys detects the required CPU features
-          export CFLAGS="-arch arm64 -mcpu=apple-m1''${CFLAGS:+ $CFLAGS}"
-          export CXXFLAGS="-arch arm64 -mcpu=apple-m1''${CXXFLAGS:+ $CXXFLAGS}"
+          # -mcpu=native auto-detects the actual CPU (M1/M2/M3/etc) and enables all available extensions
+          # This ensures aws-lc-sys detects NEON and crypto extensions on any Apple Silicon chip
+          export CFLAGS="-arch arm64 -mcpu=native''${CFLAGS:+ $CFLAGS}"
+          export CXXFLAGS="-arch arm64 -mcpu=native''${CXXFLAGS:+ $CXXFLAGS}"
         '' else ""}
         
         # Fix for aws-lc-sys: ensure NEON and crypto extensions are available
