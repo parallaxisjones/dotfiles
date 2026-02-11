@@ -56,34 +56,39 @@ in
           # Configure Rust/Cargo to find libiconv on macOS and fix aws-lc-sys issues
           # This fixes "library not found for -liconv" errors and aws-lc-sys compilation
           # Includes known registry config and adds libiconv linking
+          # Note: This will overwrite any existing .cargo/config.toml
           {
-            ".cargo/config.toml".text = ''
-              # Cargo registries
-              [registries.dsco-cargo]
-              index = "https://dl.cloudsmith.io/HrWnzYbvPYsqmoOd/dsco/cargo/cargo/index.git"
+            ".cargo/config.toml" = {
+              text = ''
+                # Cargo registries
+                [registries.dsco-cargo]
+                index = "https://dl.cloudsmith.io/HrWnzYbvPYsqmoOd/dsco/cargo/cargo/index.git"
 
-              # macOS libiconv linking configuration
-              # This fixes "library not found for -liconv" errors when building on macOS
-              [target.aarch64-apple-darwin]
-              rustflags = [
-                "-C", "link-arg=-L${pkgs.libiconv}/lib",
-                "-C", "link-arg=-liconv",
-                "-C", "target-cpu=native"
-              ]
+                # macOS libiconv linking configuration
+                # This fixes "library not found for -liconv" errors when building on macOS
+                [target.aarch64-apple-darwin]
+                rustflags = [
+                  "-C", "link-arg=-L${pkgs.libiconv}/lib",
+                  "-C", "link-arg=-liconv",
+                  "-C", "target-cpu=native"
+                ]
 
-              [target.x86_64-apple-darwin]
-              rustflags = [
-                "-C", "link-arg=-L${pkgs.libiconv}/lib",
-                "-C", "link-arg=-liconv"
-              ]
+                [target.x86_64-apple-darwin]
+                rustflags = [
+                  "-C", "link-arg=-L${pkgs.libiconv}/lib",
+                  "-C", "link-arg=-liconv"
+                ]
 
-              # Linux targets (if needed)
-              [target.x86_64-unknown-linux-gnu]
-              rustflags = []
+                # Linux targets (if needed)
+                [target.x86_64-unknown-linux-gnu]
+                rustflags = []
 
-              [target.aarch64-unknown-linux-gnu]
-              rustflags = []
-            '';
+                [target.aarch64-unknown-linux-gnu]
+                rustflags = []
+              '';
+              # Force overwrite to ensure rustflags are always present
+              force = true;
+            };
           }
           # ──────────────────────────────────────────────────────────────────────
           # 1) Ensure ~/.cache/nvim/avante/clipboard exists
