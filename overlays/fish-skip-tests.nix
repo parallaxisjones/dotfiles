@@ -1,7 +1,7 @@
 # Overlay to skip fish tests on darwin
 # Fish 4.2.1 test failures on darwin are due to missing pexpect Python module
 # The tests are run via ninja build system, so we need to prevent the test target from being built
-final: prev:
+_final: prev:
 if prev.stdenv.isDarwin then {
   fish = prev.fish.overrideAttrs (oldAttrs: {
     # Disable the check phase
