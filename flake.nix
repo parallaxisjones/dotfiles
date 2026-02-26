@@ -56,9 +56,10 @@
             "rust-analyzer"
             "rust-src"
           ];
-          # Darwin-specific build inputs for Rust
+          # Darwin-specific build inputs for Rust (libc++ for -lc++ linking, e.g. context-harness)
           darwinBuildInputs = with pkgs; nixpkgs.lib.optionals (nixpkgs.lib.strings.hasSuffix "-darwin" system) [
             libiconv
+            libcxx
           ];
         in
         {
@@ -85,9 +86,9 @@
                 cflagsValue = if isAarch64Darwin then "-arch arm64" else "";
                 darwinEnv =
                   if isDarwin then ''
-                    # libiconv linking
-                    export LIBRARY_PATH="${iconvLib}''${LIBRARY_PATH:+:$LIBRARY_PATH}"
-                    export LDFLAGS="-L${iconvLib}''${LDFLAGS:+ $LDFLAGS}"
+                    # libiconv and libc++ linking (libc++ for -lc++ e.g. context-harness)
+                    export LIBRARY_PATH="${iconvLib}:${pkgs.libcxx}/lib''${LIBRARY_PATH:+:$LIBRARY_PATH}"
+                    export LDFLAGS="-L${iconvLib} -L${pkgs.libcxx}/lib''${LDFLAGS:+ $LDFLAGS}"
                 
                     # Compiler flags
                     # Use clang (not gcc) for proper Apple Silicon support
