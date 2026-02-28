@@ -73,13 +73,17 @@ in
                   rustflags = [
                     "-C", "link-arg=-L${pkgs.libiconv}/lib",
                     "-C", "link-arg=-liconv",
+                    "-C", "link-arg=-L${pkgs.libcxx}/lib",
+                    "-C", "link-arg=-lc++",
                     "-C", "target-cpu=native"
                   ]
 
                   [target.x86_64-apple-darwin]
                   rustflags = [
                     "-C", "link-arg=-L${pkgs.libiconv}/lib",
-                    "-C", "link-arg=-liconv"
+                    "-C", "link-arg=-liconv",
+                    "-C", "link-arg=-L${pkgs.libcxx}/lib",
+                    "-C", "link-arg=-lc++"
                   ]
 
                   # Linux targets (if needed)
