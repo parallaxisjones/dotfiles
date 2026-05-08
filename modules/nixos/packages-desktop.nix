@@ -19,7 +19,6 @@ with pkgs; [
   bc
   galculator
   pavucontrol
-  cider
   discord
   hexchat
   fractal
