@@ -31,6 +31,6 @@ jobs:
           pr-labels: 'dependencies,automerge'
           branch: 'ci/flake-update'
           # Skip updating the secrets input since CI can't access the private repo
-          inputs-to-update: 'nixpkgs agenix home-manager darwin nix-homebrew homebrew-bundle homebrew-core homebrew-cask disko fenix'
+          inputs: 'nixpkgs agenix home-manager darwin nix-homebrew homebrew-bundle homebrew-core homebrew-cask disko fenix'
 
 
