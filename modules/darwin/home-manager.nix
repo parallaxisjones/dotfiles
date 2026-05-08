@@ -141,7 +141,7 @@ in
               sources.mine = {
                 input = "my-skills";
                 subdir = "skills";
-                filter.nameRegex = "^(engineering|misc|personal|productivity)/";
+                filter.nameRegex = "^(engineering|misc|personal|productivity)/.*";
               };
               skills.enableAll = true;
               targets.claude.enable = true;
