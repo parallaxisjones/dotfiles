@@ -60,9 +60,9 @@ in
 
       # Rust/Cargo environment variables for macOS builds
       ${if pkgs.stdenv.isDarwin then ''
-        # libiconv linking for Rust on macOS
-        export LIBRARY_PATH="${pkgs.libiconv}/lib''${LIBRARY_PATH:+:$LIBRARY_PATH}"
-        export LDFLAGS="-L${pkgs.libiconv}/lib''${LDFLAGS:+ $LDFLAGS}"
+        # libiconv and libc++ linking for Rust on macOS
+        export LIBRARY_PATH="${pkgs.libiconv}/lib:${pkgs.libcxx}/lib''${LIBRARY_PATH:+:$LIBRARY_PATH}"
+        export LDFLAGS="-L${pkgs.libiconv}/lib -L${pkgs.libcxx}/lib''${LDFLAGS:+ $LDFLAGS}"
         
         # Compiler flags for aarch64-darwin
         # Use clang (not gcc) for proper Apple Silicon support
