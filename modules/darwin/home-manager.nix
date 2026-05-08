@@ -21,6 +21,7 @@ in
 
   homebrew = {
     enable = true;
+    brews = [ "rtk" ];
     casks = pkgs.callPackage ./casks.nix { };
   };
 
