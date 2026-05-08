@@ -29,7 +29,7 @@ in
     useGlobalPkgs = true;
     extraSpecialArgs = { inherit inputs; };
     sharedModules = [ inputs.agent-skills-nix.homeManagerModules.default ];
-    users.${user} = { pkgs, config, lib, inputs, ... }:
+    users.${user} = { pkgs, config, lib, ... }:
       let
         # Get system from pkgs
         inherit (pkgs) system;
