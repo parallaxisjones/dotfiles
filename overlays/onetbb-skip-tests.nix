@@ -3,7 +3,7 @@
 # The tests pass locally but fail in CI environments, so we disable them
 _final: prev:
 if prev.stdenv.isLinux then {
-  onetbb = prev.onetbb.overrideAttrs (oldAttrs: {
+  onetbb = prev.onetbb.overrideAttrs (_: {
     # Disable the check phase
     doCheck = false;
     # Override checkPhase
