@@ -36,6 +36,14 @@
       url = "git+ssh://git@github.com/parallaxisjones/nix-secrets.git";
       flake = false;
     };
+    agent-skills-nix = {
+      url = "github:Kyure-A/agent-skills-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };
+    my-skills = {
+      url = "github:parallaxisjones/skills";
+    };
   };
   outputs = { self, darwin, nix-homebrew, homebrew-bundle, homebrew-core, homebrew-cask, home-manager, nixpkgs, disko, fenix, ... } @inputs:
     let
@@ -191,7 +199,7 @@
       darwinConfigurations = nixpkgs.lib.genAttrs darwinSystems (system:
         darwin.lib.darwinSystem {
           inherit system;
-          specialArgs = inputs // { user = workUser; inherit fenix; };
+          specialArgs = inputs // { user = workUser; inherit fenix inputs; };
           modules = [
             { nixpkgs.overlays = [ fenix.overlays.default ] ++ overlays; }
             home-manager.darwinModules.home-manager

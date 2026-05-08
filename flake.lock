@@ -21,6 +21,29 @@
         "type": "github"
       }
     },
+    "agent-skills-nix": {
+      "inputs": {
+        "home-manager": [
+          "home-manager"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1777875835,
+        "narHash": "sha256-+ghBYIh477YxDPd0sKeD4AwnKJSOXKT0nHuAAGHL1cQ=",
+        "owner": "Kyure-A",
+        "repo": "agent-skills-nix",
+        "rev": "c6cb03f84cda0dc3f5daa05bf4d49f56c182f690",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Kyure-A",
+        "repo": "agent-skills-nix",
+        "type": "github"
+      }
+    },
     "brew-src": {
       "flake": false,
       "locked": {
@@ -209,6 +232,21 @@
         "type": "github"
       }
     },
+    "my-skills": {
+      "locked": {
+        "lastModified": 1778253792,
+        "narHash": "sha256-3YiCRqTHshva0hrNZAk5aMzR8Xb0Vj7OjEtYWqWBHO0=",
+        "owner": "parallaxisjones",
+        "repo": "skills",
+        "rev": "8cc71d3f832b6c9b75faa794a133f29707627b92",
+        "type": "github"
+      },
+      "original": {
+        "owner": "parallaxisjones",
+        "repo": "skills",
+        "type": "github"
+      }
+    },
     "nix-homebrew": {
       "inputs": {
         "brew-src": "brew-src"
@@ -278,6 +316,7 @@
     "root": {
       "inputs": {
         "agenix": "agenix",
+        "agent-skills-nix": "agent-skills-nix",
         "darwin": "darwin_2",
         "disko": "disko",
         "fenix": "fenix",
@@ -285,6 +324,7 @@
         "homebrew-bundle": "homebrew-bundle",
         "homebrew-cask": "homebrew-cask",
         "homebrew-core": "homebrew-core",
+        "my-skills": "my-skills",
         "nix-homebrew": "nix-homebrew",
         "nixpkgs": "nixpkgs_3",
         "secrets": "secrets"

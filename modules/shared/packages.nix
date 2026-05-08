@@ -106,5 +106,5 @@ with pkgs; [
   lua-language-server
   # aider removed due to heavy dependency closure and test flakiness
 ] ++ pkgs.lib.optionals (!pkgs.stdenv.isDarwin) [
-  neofetch
+  fastfetch
 ]

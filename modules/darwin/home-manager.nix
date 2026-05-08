@@ -1,4 +1,4 @@
-{ config, pkgs, lib, agenix, fenix ? null, ... }:
+{ config, pkgs, lib, agenix, fenix ? null, inputs, ... }:
 
 let
   user = "pjones";
@@ -26,7 +26,9 @@ in
 
   home-manager = {
     useGlobalPkgs = true;
-    users.${user} = { pkgs, config, lib, ... }:
+    extraSpecialArgs = { inherit inputs; };
+    sharedModules = [ inputs.agent-skills-nix.homeManagerModules.default ];
+    users.${user} = { pkgs, config, lib, inputs, ... }:
       let
         # Get system from pkgs
         inherit (pkgs) system;
@@ -127,10 +129,25 @@ in
         };
         imports = [
           agenix.homeManagerModules.default
-          # ./secrets.nix 
+          # ./secrets.nix
         ];
+
         # ─────────────────────────────────────────────────────────────────────────
-        programs = { } // import ../shared/home-manager.nix { inherit config pkgs lib; };
+        programs = lib.mkMerge [
+          (import ../shared/home-manager.nix { inherit config pkgs lib; })
+          {
+            agent-skills = {
+              enable = true;
+              sources.mine = {
+                input = "my-skills";
+                subdir = "skills";
+                filter.nameRegex = "^(engineering|misc|personal|productivity)/";
+              };
+              skills.enableAll = true;
+              targets.claude.enable = true;
+            };
+          }
+        ];
         manual.manpages.enable = false;
 
         # Ensure a writable known_hosts exists for the user (not a symlink)
