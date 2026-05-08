@@ -160,6 +160,21 @@ local plugins = {
       vim.keymap.set("n", "zM", require("ufo").closeAllFolds, { desc = "UFO: close all folds" })
     end,
   },
+
+  {
+    "obsidian-nvim/obsidian.nvim",
+    lazy = true,
+    ft = "markdown",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    opts = {
+      legacy_commands = false,
+      workspaces = {
+        { name = "Rithum", path = "~/dev/rithum/Rithum" },
+      },
+      completion = { nvim_cmp = true, min_chars = 2 },
+      ui = { enable = false }, -- render-markdown.nvim handles rendering
+    },
+  },
 }
 
 return plugins
