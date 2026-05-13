@@ -4,8 +4,7 @@ let
   user = "pjones";
 in
 {
-  programs.agenix = {
-    enable = true;
+  age = {
     identityPaths = [ "/Users/${user}/.ssh/parallaxis" ];
     secrets = {
       "openai-key" = {
@@ -13,8 +12,12 @@ in
         path = "/Users/${user}/.config/nvim/openai_key.txt";
         file = "${secrets}/openai-key.age";
         mode = "600";
-        owner = "${user}";
-        group = "staff";
+      };
+      "anthropic-api-key" = {
+        symlink = true;
+        path = "/Users/${user}/.config/anthropic/api-key";
+        file = "${secrets}/anthropic-api-key.age";
+        mode = "600";
       };
     };
   };

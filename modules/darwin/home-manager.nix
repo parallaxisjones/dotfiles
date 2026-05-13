@@ -2,6 +2,7 @@
 
 let
   user = "pjones";
+  inherit (inputs) secrets;
   # myEmacsLauncher was unused; removed to satisfy deadnix
   sharedFiles = import ../shared/files.nix { inherit config pkgs lib; };
   additionalFiles = import ./files.nix { inherit user config pkgs; };
@@ -27,7 +28,7 @@ in
 
   home-manager = {
     useGlobalPkgs = true;
-    extraSpecialArgs = { inherit inputs; };
+    extraSpecialArgs = { inherit inputs secrets; };
     sharedModules = [ inputs.agent-skills-nix.homeManagerModules.default ];
     users.${user} = { pkgs, config, lib, ... }:
       let
@@ -130,7 +131,7 @@ in
         };
         imports = [
           agenix.homeManagerModules.default
-          # ./secrets.nix
+          ./secrets.nix
         ];
 
         # ─────────────────────────────────────────────────────────────────────────

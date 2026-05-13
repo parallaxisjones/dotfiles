@@ -11,6 +11,7 @@ in
   imports = [
     darwinHM
     ../../modules/darwin/home-manager.nix
+    ../../modules/darwin/claude-code-managed.nix
     ../../modules/shared
   ];
   nix = {

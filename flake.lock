@@ -350,11 +350,11 @@
     "secrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1763386863,
-        "narHash": "sha256-yKxMsKXRtwq0bPIjEAqxdpgLDN494YftQ+cMzMJbHKU=",
+        "lastModified": 1778679257,
+        "narHash": "sha256-rIdaXA9r1IQRiQSP3niWbHmAyTw1hWrWCvkhx8AUN2U=",
         "ref": "refs/heads/main",
-        "rev": "074c158dad19b14950df615029a3ed5b656d9551",
-        "revCount": 22,
+        "rev": "8dd6dc63e566394cc16e0fee6b95f4c4dfa12016",
+        "revCount": 23,
         "type": "git",
         "url": "ssh://git@github.com/parallaxisjones/nix-secrets.git"
       },
