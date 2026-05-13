@@ -9,4 +9,5 @@ shared-packages ++ [
   devenv
   pnpm
   docker-compose
+  syncthing
 ]

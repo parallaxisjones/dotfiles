@@ -19,7 +19,7 @@ _:
 
   # Utility Tools
   "appcleaner"
-  "syncthing-app"
+  # Syncthing: syncthing-app cask fails on recent macOS ("only Big Sur"); use nixpkgs syncthing in packages.nix instead.
   "tailscale-app"
 
   # Entertainment Tools
