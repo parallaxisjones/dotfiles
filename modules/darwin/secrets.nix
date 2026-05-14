@@ -19,6 +19,18 @@ in
         file = "${secrets}/anthropic-api-key.age";
         mode = "600";
       };
+      "datadog-api-key" = {
+        symlink = true;
+        path = "/Users/${user}/.config/datadog/api-key";
+        file = "${secrets}/datadog-api-key.age";
+        mode = "600";
+      };
+      "datadog-app-key" = {
+        symlink = true;
+        path = "/Users/${user}/.config/datadog/app-key";
+        file = "${secrets}/datadog-app-key.age";
+        mode = "600";
+      };
     };
   };
 }
