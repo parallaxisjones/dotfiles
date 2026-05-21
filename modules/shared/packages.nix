@@ -1,15 +1,5 @@
 { pkgs, ... }:
 
-let
-  myPython = pkgs.python3.withPackages (ps: with ps; [
-    slpp
-    pip
-    rich
-    virtualenv
-    black
-  ]);
-in
-
 with pkgs; [
   # General packages for development and system management
   act
@@ -102,7 +92,6 @@ with pkgs; [
   unzip
   zsh-powerlevel10k
   eza
-  myPython
   lua-language-server
   # aider removed due to heavy dependency closure and test flakiness
 ] ++ pkgs.lib.optionals (!pkgs.stdenv.isDarwin) [
