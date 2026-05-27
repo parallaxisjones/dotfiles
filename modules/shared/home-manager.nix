@@ -301,8 +301,8 @@ in
         IdentitiesOnly = "yes";
         IdentityFile = [
           (if pkgs.stdenv.hostPlatform.isDarwin
-            then "/Users/${workUser}/.ssh/id_github"
-            else "/home/${user}/.ssh/id_github")
+          then "/Users/${workUser}/.ssh/id_github"
+          else "/home/${user}/.ssh/id_github")
         ];
       };
       "nixos" = {
@@ -310,8 +310,8 @@ in
         User = "parallaxis";
         IdentityFile = [
           (if pkgs.stdenv.hostPlatform.isDarwin
-            then "/Users/${workUser}/.ssh/parallaxis"
-            else "/home/${user}/.ssh/parallaxis")
+          then "/Users/${workUser}/.ssh/parallaxis"
+          else "/home/${user}/.ssh/parallaxis")
         ];
         IdentitiesOnly = "yes";
       } // lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
@@ -322,8 +322,8 @@ in
         User = "parallaxis";
         IdentityFile = [
           (if pkgs.stdenv.hostPlatform.isDarwin
-            then "/Users/${workUser}/.ssh/parallaxis"
-            else "/home/${user}/.ssh/parallaxis")
+          then "/Users/${workUser}/.ssh/parallaxis"
+          else "/home/${user}/.ssh/parallaxis")
         ];
         IdentitiesOnly = "yes";
       } // lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
