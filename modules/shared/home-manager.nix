@@ -293,15 +293,13 @@ in
         "/Users/${workUser}/.ssh/config_external"
       )
     ];
-    matchBlocks = {
+    settings = {
       "*" = {
-        extraOptions = {
-          UserKnownHostsFile = "~/.ssh/known_hosts ~/.ssh/known_hosts_hm";
-        };
+        UserKnownHostsFile = "~/.ssh/known_hosts ~/.ssh/known_hosts_hm";
       };
       "github.com" = {
-        identitiesOnly = true;
-        identityFile = [
+        IdentitiesOnly = "yes";
+        IdentityFile = [
           (lib.mkIf pkgs.stdenv.hostPlatform.isLinux
             "/home/${user}/.ssh/id_github"
           )
@@ -310,11 +308,10 @@ in
           )
         ];
       };
-      # Parallaxis key for NixOS
       "nixos" = {
-        hostname = "nixos.attlocal.net";
-        user = "parallaxis";
-        identityFile = [
+        HostName = "nixos.attlocal.net";
+        User = "parallaxis";
+        IdentityFile = [
           (lib.mkIf pkgs.stdenv.hostPlatform.isLinux
             "/home/${user}/.ssh/parallaxis"
           )
@@ -322,15 +319,13 @@ in
             "/Users/${workUser}/.ssh/parallaxis"
           )
         ];
-        identitiesOnly = true;
-        extraOptions = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
-          AddKeysToAgent = "yes";
-        };
+        IdentitiesOnly = "yes";
+        AddKeysToAgent = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin "yes";
       };
       "nixos.local" = {
-        hostname = "nixos.attlocal.net";
-        user = "parallaxis";
-        identityFile = [
+        HostName = "nixos.attlocal.net";
+        User = "parallaxis";
+        IdentityFile = [
           (lib.mkIf pkgs.stdenv.hostPlatform.isLinux
             "/home/${user}/.ssh/parallaxis"
           )
@@ -338,10 +333,8 @@ in
             "/Users/${workUser}/.ssh/parallaxis"
           )
         ];
-        identitiesOnly = true;
-        extraOptions = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
-          AddKeysToAgent = "yes";
-        };
+        IdentitiesOnly = "yes";
+        AddKeysToAgent = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin "yes";
       };
     };
   };
