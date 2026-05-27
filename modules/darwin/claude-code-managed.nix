@@ -1,13 +1,16 @@
-{ pkgs, lib, ... }:
+_:
 
-let
-  fragment = pkgs.writeText "10-anthropic-api-key.json" (
-    builtins.toJSON {
-      apiKeyHelper = "cat /Users/pjones/.config/anthropic/api-key";
-    }
-  );
-in
 {
+  # Re-enable by restoring the lambda pattern to `{ pkgs, lib, ... }` and uncommenting:
+  #
+  # let
+  #   fragment = pkgs.writeText "10-anthropic-api-key.json" (
+  #     builtins.toJSON {
+  #       apiKeyHelper = "cat /Users/pjones/.config/anthropic/api-key";
+  #     }
+  #   );
+  # in
+  #
   # Run before homebrew activation (see activation-scripts.nix order): when brew bundle fails,
   # postActivation never runs due to set -e.
   # system.activationScripts.extraActivation.text = lib.mkAfter ''

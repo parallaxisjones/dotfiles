@@ -300,41 +300,34 @@ in
       "github.com" = {
         IdentitiesOnly = "yes";
         IdentityFile = [
-          (lib.mkIf pkgs.stdenv.hostPlatform.isLinux
-            "/home/${user}/.ssh/id_github"
-          )
-          (lib.mkIf pkgs.stdenv.hostPlatform.isDarwin
-            "/Users/${workUser}/.ssh/id_github"
-          )
+          (if pkgs.stdenv.hostPlatform.isDarwin
+            then "/Users/${workUser}/.ssh/id_github"
+            else "/home/${user}/.ssh/id_github")
         ];
       };
       "nixos" = {
         HostName = "nixos.attlocal.net";
         User = "parallaxis";
         IdentityFile = [
-          (lib.mkIf pkgs.stdenv.hostPlatform.isLinux
-            "/home/${user}/.ssh/parallaxis"
-          )
-          (lib.mkIf pkgs.stdenv.hostPlatform.isDarwin
-            "/Users/${workUser}/.ssh/parallaxis"
-          )
+          (if pkgs.stdenv.hostPlatform.isDarwin
+            then "/Users/${workUser}/.ssh/parallaxis"
+            else "/home/${user}/.ssh/parallaxis")
         ];
         IdentitiesOnly = "yes";
-        AddKeysToAgent = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin "yes";
+      } // lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
+        AddKeysToAgent = "yes";
       };
       "nixos.local" = {
         HostName = "nixos.attlocal.net";
         User = "parallaxis";
         IdentityFile = [
-          (lib.mkIf pkgs.stdenv.hostPlatform.isLinux
-            "/home/${user}/.ssh/parallaxis"
-          )
-          (lib.mkIf pkgs.stdenv.hostPlatform.isDarwin
-            "/Users/${workUser}/.ssh/parallaxis"
-          )
+          (if pkgs.stdenv.hostPlatform.isDarwin
+            then "/Users/${workUser}/.ssh/parallaxis"
+            else "/home/${user}/.ssh/parallaxis")
         ];
         IdentitiesOnly = "yes";
-        AddKeysToAgent = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin "yes";
+      } // lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
+        AddKeysToAgent = "yes";
       };
     };
   };
