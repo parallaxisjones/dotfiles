@@ -2,7 +2,7 @@ name: Auto Update Flakes
 
 on:
   schedule:
-    - cron: '0 9 * * 1'
+    - cron: '0 9 * * *'
   workflow_dispatch:
 
 permissions:
@@ -25,7 +25,10 @@ jobs:
         id: update
         uses: DeterminateSystems/update-flake-lock@v28
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          # Use a fine-grained PAT (Contents RW + Pull requests RW), NOT GITHUB_TOKEN:
+          # PRs opened by GITHUB_TOKEN do not trigger the pull_request CI, so lint-eval
+          # never runs and the automerge job (needs: [lint-eval]) never fires.
+          token: ${{ secrets.FLAKE_UPDATE_TOKEN }}
           commit-msg: 'chore: update flake.lock'
           pr-title: 'chore: update flake.lock'
           pr-labels: 'dependencies,automerge'
