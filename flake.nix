@@ -59,8 +59,9 @@
       devShell = system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
-          # Get fenix toolchain with all components including clippy
-          rustToolchain = fenix.packages.${system}.complete.withComponents [
+          # Latest stable Rust toolchain (clippy etc.) as of the locked fenix input.
+          # Run `nix flake update fenix` then build-switch to move to a newer stable.
+          rustToolchain = fenix.packages.${system}.stable.withComponents [
             "cargo"
             "clippy"
             "rustc"

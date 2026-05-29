@@ -37,7 +37,9 @@ in
         # Get Rust toolchain from fenix if available
         rustToolchain =
           if fenix != null then
-            fenix.packages.${system}.complete.withComponents [
+          # `stable` = latest stable release as of the locked fenix input.
+          # Run `nix flake update fenix` then build-switch to move to a newer stable.
+            fenix.packages.${system}.stable.withComponents [
               "cargo"
               "clippy"
               "rustc"

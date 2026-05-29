@@ -10,6 +10,12 @@ FLAKE_SYSTEM="darwinConfigurations.${SYSTEM_TYPE}.system"
 
 export NIXPKGS_ALLOW_UNFREE=1
 
+# Pull the latest merged config from origin first, so a single `build-switch`
+# always applies the up-to-date flake.lock without a manual `git pull`.
+# --autostash shelves any local edits, rebases, then restores them.
+echo "${YELLOW}Syncing with origin...${NC}"
+git pull --rebase --autostash
+
 echo "${YELLOW}Starting build...${NC}"
 nix --extra-experimental-features 'nix-command flakes' build .#$FLAKE_SYSTEM $@
 
