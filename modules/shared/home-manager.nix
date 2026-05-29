@@ -58,27 +58,11 @@ in
       export EDITOR="nvim"
       export VISUAL="nvim"
 
-      # Rust/Cargo environment variables for macOS builds
-      ${if pkgs.stdenv.isDarwin then ''
-        # libiconv and libc++ linking for Rust on macOS
-        export LIBRARY_PATH="${pkgs.libiconv}/lib:${pkgs.libcxx}/lib''${LIBRARY_PATH:+:$LIBRARY_PATH}"
-        export LDFLAGS="-L${pkgs.libiconv}/lib -L${pkgs.libcxx}/lib''${LDFLAGS:+ $LDFLAGS}"
-        
-        # Compiler flags for aarch64-darwin
-        # Use clang (not gcc) for proper Apple Silicon support
-        export CC="${pkgs.clang}/bin/clang"
-        export CXX="${pkgs.clang}/bin/clang++"
-        ${if pkgs.stdenv.isAarch64 then ''
-          # Enable ARM64 crypto extensions for aws-lc-sys
-          # -mcpu=native auto-detects the actual CPU (M1/M2/M3/etc) and enables all available extensions
-          # This ensures aws-lc-sys detects NEON and crypto extensions on any Apple Silicon chip
-          export CFLAGS="-arch arm64 -mcpu=native''${CFLAGS:+ $CFLAGS}"
-          export CXXFLAGS="-arch arm64 -mcpu=native''${CXXFLAGS:+ $CXXFLAGS}"
-        '' else ""}
-        
-        # Fix for aws-lc-sys: ensure NEON and crypto extensions are available
-        export RUSTFLAGS="-C link-arg=-L${pkgs.libiconv}/lib -C link-arg=-liconv''${RUSTFLAGS:+ $RUSTFLAGS}"
-      '' else ""}
+      # Rust/Cargo C-toolchain config (CC, linker, etc.) for macOS lives in
+      # ~/.cargo/config.toml — see modules/darwin/home-manager.nix. It is scoped to
+      # cargo there rather than exported globally here: forcing a global $CC to the
+      # nix clang-wrapper broke aws-lc-sys (missing dsymutil), and the append-based
+      # CFLAGS/RUSTFLAGS exports duplicated on every shell re-source.
 
       # Use difftastic, syntax-aware diffing
       # alias diff=difft

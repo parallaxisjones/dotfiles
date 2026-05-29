@@ -90,32 +90,16 @@
             ] ++ darwinBuildInputs;
             shellHook =
               let
-                iconvLib = "${pkgs.libiconv}/lib";
                 isDarwin = nixpkgs.lib.strings.hasSuffix "-darwin" system;
-                isAarch64Darwin = system == "aarch64-darwin";
-                # For aarch64-darwin, use -arch arm64 flag for proper compilation
-                # For x86_64-darwin, use standard flags
-                cflagsValue = if isAarch64Darwin then "-arch arm64" else "";
                 darwinEnv =
                   if isDarwin then ''
-                    # libiconv and libc++ linking (libc++ for -lc++ e.g. context-harness)
-                    export LIBRARY_PATH="${iconvLib}:${pkgs.libcxx}/lib''${LIBRARY_PATH:+:$LIBRARY_PATH}"
-                    export LDFLAGS="-L${iconvLib} -L${pkgs.libcxx}/lib''${LDFLAGS:+ $LDFLAGS}"
-                
-                    # Compiler flags
-                    # Use clang (not gcc) for proper Apple Silicon support
-                    export CC="${pkgs.clang}/bin/clang"
-                    export CXX="${pkgs.clang}/bin/clang++"
-                    ${if cflagsValue != "" then ''
-                      # Enable ARM64 crypto extensions for aws-lc-sys
-                      # -mcpu=native auto-detects the actual CPU (M1/M2/M3/etc) and enables all available extensions
-                      # This ensures aws-lc-sys detects NEON and crypto extensions on any Apple Silicon chip
-                      export CFLAGS="${cflagsValue} -mcpu=native''${CFLAGS:+ $CFLAGS}"
-                      export CXXFLAGS="${cflagsValue} -mcpu=native''${CXXFLAGS:+ $CXXFLAGS}"
-                    '' else ""}
-                
-                    # Fix for aws-lc-sys: ensure NEON and crypto extensions are available
-                    export RUSTFLAGS="-C link-arg=-L${iconvLib} -C link-arg=-liconv''${RUSTFLAGS:+ $RUSTFLAGS}"
+                    # Use the system Apple clang for C deps (aws-lc-sys etc.). The nix
+                    # clang-wrapper lacks dsymutil and mishandles the arm64-apple-macosx
+                    # target triple, which breaks aws-lc-sys' compiler feature probes.
+                    # /usr/bin/clang ships dsymutil + the macOS SDK, so cargo C builds and
+                    # the final link both succeed (matches ~/.cargo/config.toml on darwin).
+                    export CC="/usr/bin/clang"
+                    export CXX="/usr/bin/clang++"
                   '' else "";
                 linuxEnv =
                   if nixpkgs.lib.strings.hasSuffix "-linux" system then ''

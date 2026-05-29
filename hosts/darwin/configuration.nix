@@ -25,6 +25,7 @@ in
 
       trusted-public-keys = [
         "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
         "parallaxisjones.cachix.org-1:A85H34pyLFZq2A3A0hB32/8CXuFNS3e4Js+KlKlP43Q="
       ];
 
@@ -34,10 +35,11 @@ in
       ];
 
       # Remote builder configuration (controller side)
-      # - Use a conservative single-job builder entry to avoid OOM on the server
-      # - Force local max-jobs to 0 to offload builds
+      # - Conservative single-job builder entry to avoid OOM on the server
+      # - Allow up to 8 local jobs as a fallback when the remote builder
+      #   can't serve a given system (matches former ~/.config/nix/nix.conf)
       builders-use-substitutes = true;
-      max-jobs = 0;
+      max-jobs = 8;
       builders = lib.mkForce "@/etc/nix/machines";
     };
     gc = {

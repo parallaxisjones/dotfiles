@@ -60,9 +60,8 @@ in
             {
               ".ssh/.keep".text = "";
             }
-            # Configure Rust/Cargo to find libiconv on macOS and fix aws-lc-sys issues
-            # This fixes "library not found for -liconv" errors and aws-lc-sys compilation
-            # Includes known registry config and adds libiconv linking
+            # Configure Rust/Cargo for macOS: use the system Apple clang for C deps
+            # (aws-lc-sys etc.) so plain-terminal builds work, plus the dsco registry.
             # Note: This will overwrite any existing .cargo/config.toml
             {
               ".cargo/config.toml" = {
@@ -71,24 +70,30 @@ in
                   [registries.dsco-cargo]
                   index = "https://dl.cloudsmith.io/HrWnzYbvPYsqmoOd/dsco/cargo/cargo/index.git"
 
-                  # macOS libiconv linking configuration
-                  # This fixes "library not found for -liconv" errors when building on macOS
+                  # macOS: compile C dependencies (e.g. aws-lc-sys) and link with the
+                  # system Apple clang rather than the nix clang-wrapper.
+                  #
+                  # The nix clang-wrapper lacks `dsymutil` and mishandles the
+                  # `arm64-apple-macosx` target triple that aws-lc-sys passes, so its
+                  # compiler-feature probes abort with "tool 'dsymutil' not found".
+                  # /usr/bin/clang (Command Line Tools) has dsymutil and the right SDK,
+                  # so plain-terminal `cargo build`/`cargo test` succeed cleanly.
+                  #
+                  # Scoped here (not as global $CC) so only cargo builds are affected.
+                  [env]
+                  CC_aarch64_apple_darwin = "/usr/bin/clang"
+                  CXX_aarch64_apple_darwin = "/usr/bin/clang++"
+                  CC_x86_64_apple_darwin = "/usr/bin/clang"
+                  CXX_x86_64_apple_darwin = "/usr/bin/clang++"
+
+                  # Use the system linker too, so the final link uses the macOS SDK's
+                  # libiconv/libc++ instead of nix dylibs (avoids "built for newer macOS
+                  # version" linker warnings). No -liconv/-lc++ rustflags needed.
                   [target.aarch64-apple-darwin]
-                  rustflags = [
-                    "-C", "link-arg=-L${pkgs.libiconv}/lib",
-                    "-C", "link-arg=-liconv",
-                    "-C", "link-arg=-L${pkgs.libcxx}/lib",
-                    "-C", "link-arg=-lc++",
-                    "-C", "target-cpu=native"
-                  ]
+                  linker = "/usr/bin/clang"
 
                   [target.x86_64-apple-darwin]
-                  rustflags = [
-                    "-C", "link-arg=-L${pkgs.libiconv}/lib",
-                    "-C", "link-arg=-liconv",
-                    "-C", "link-arg=-L${pkgs.libcxx}/lib",
-                    "-C", "link-arg=-lc++"
-                  ]
+                  linker = "/usr/bin/clang"
 
                   # Linux targets (if needed)
                   [target.x86_64-unknown-linux-gnu]
