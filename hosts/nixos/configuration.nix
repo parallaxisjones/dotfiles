@@ -32,22 +32,24 @@
     # machine from desktop to server. Re-enable when needed.
     # binfmt.emulatedSystems = [ "aarch64-linux" ];
   };
-  nix.settings = {
-    experimental-features = [ "nix-command" "flakes" ];
-    # Constrain parallelism to avoid OOM under load
-    max-jobs = 2;
-    cores = 2;
-    # Keep features minimal for this host
-    system-features = [ "kvm" ];
-    extra-platforms = [ "aarch64-linux" "i686-linux" ];
+  nix = {
+    settings = {
+      experimental-features = [ "nix-command" "flakes" ];
+      # Constrain parallelism to avoid OOM under load
+      max-jobs = 2;
+      cores = 2;
+      # Keep features minimal for this host
+      system-features = [ "kvm" ];
+      extra-platforms = [ "aarch64-linux" "i686-linux" ];
+    };
+    # Keep the store tidy on this always-on host: weekly GC + automatic dedup.
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 30d";
+    };
+    optimise.automatic = true;
   };
-  # Keep the store tidy on this always-on host: weekly GC + automatic dedup.
-  nix.gc = {
-    automatic = true;
-    dates = "weekly";
-    options = "--delete-older-than 30d";
-  };
-  nix.optimise.automatic = true;
   networking = {
     hostName = "nixos"; # Define your hostname.
     networkmanager.enable = true;
