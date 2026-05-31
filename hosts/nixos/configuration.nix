@@ -41,6 +41,13 @@
     system-features = [ "kvm" ];
     extra-platforms = [ "aarch64-linux" "i686-linux" ];
   };
+  # Keep the store tidy on this always-on host: weekly GC + automatic dedup.
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 30d";
+  };
+  nix.optimise.automatic = true;
   networking = {
     hostName = "nixos"; # Define your hostname.
     networkmanager.enable = true;
