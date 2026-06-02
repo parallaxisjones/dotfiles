@@ -1,4 +1,4 @@
-{ ... }:
+_:
 
 # *arr automation, as native NixOS services (no containers needed — they run on
 # the host network and reach qBittorrent's WebUI at 127.0.0.1:8080).
@@ -17,15 +17,17 @@
 #   - Sonarr/Radarr: add qBittorrent download client at 127.0.0.1:8080
 #   - root folders: /mnt/nas/media/tv (Sonarr), /mnt/nas/media/movies (Radarr)
 {
-  services.prowlarr.enable = true;
+  services = {
+    prowlarr.enable = true;
 
-  services.sonarr = {
-    enable = true;
-    group = "media";
-  };
+    sonarr = {
+      enable = true;
+      group = "media";
+    };
 
-  services.radarr = {
-    enable = true;
-    group = "media";
+    radarr = {
+      enable = true;
+      group = "media";
+    };
   };
 }

@@ -1,4 +1,4 @@
-{ ... }:
+_:
 
 # Local download staging. Active downloads + seeding live on the fast local
 # ext4 root; completed media is imported (copied) to the NAS by the *arr stack.

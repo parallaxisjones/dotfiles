@@ -20,57 +20,61 @@ let
   certDir = "/var/lib/caddy/tailscale";
 in
 {
-  # Permit the caddy user to obtain tailnet certs from the tailscale daemon.
-  services.tailscale.permitCertUid = "caddy";
+  systemd = {
+    tmpfiles.rules = [
+      "d ${certDir} 0750 caddy caddy -"
+    ];
 
-  systemd.tmpfiles.rules = [
-    "d ${certDir} 0750 caddy caddy -"
-  ];
+    # Fetch/refresh the cert before Caddy starts, and weekly thereafter.
+    services.tailscale-cert = {
+      description = "Provision tailnet TLS certificate for Caddy";
+      after = [ "tailscaled.service" "network-online.target" ];
+      wants = [ "network-online.target" ];
+      before = [ "caddy.service" ];
+      wantedBy = [ "caddy.service" ];
+      serviceConfig = {
+        Type = "oneshot";
+        User = "caddy";
+        Group = "caddy";
+        ExecStart = ''
+          ${pkgs.tailscale}/bin/tailscale cert \
+            --cert-file ${certDir}/${host}.crt \
+            --key-file ${certDir}/${host}.key \
+            ${host}
+        '';
+      };
+    };
 
-  # Fetch/refresh the cert before Caddy starts, and weekly thereafter.
-  systemd.services.tailscale-cert = {
-    description = "Provision tailnet TLS certificate for Caddy";
-    after = [ "tailscaled.service" "network-online.target" ];
-    wants = [ "network-online.target" ];
-    before = [ "caddy.service" ];
-    wantedBy = [ "caddy.service" ];
-    serviceConfig = {
-      Type = "oneshot";
-      User = "caddy";
-      Group = "caddy";
-      ExecStart = ''
-        ${pkgs.tailscale}/bin/tailscale cert \
-          --cert-file ${certDir}/${host}.crt \
-          --key-file ${certDir}/${host}.key \
-          ${host}
-      '';
+    timers.tailscale-cert = {
+      wantedBy = [ "timers.target" ];
+      timerConfig = {
+        OnCalendar = "weekly";
+        Persistent = true;
+      };
     };
   };
 
-  systemd.timers.tailscale-cert = {
-    wantedBy = [ "timers.target" ];
-    timerConfig = {
-      OnCalendar = "weekly";
-      Persistent = true;
-    };
-  };
+  services = {
+    # Permit the caddy user to obtain tailnet certs from the tailscale daemon.
+    tailscale.permitCertUid = "caddy";
 
-  services.caddy = {
-    enable = true;
-    virtualHosts."${host}" = {
-      extraConfig = ''
-        tls ${certDir}/${host}.crt ${certDir}/${host}.key
+    caddy = {
+      enable = true;
+      virtualHosts."${host}" = {
+        extraConfig = ''
+          tls ${certDir}/${host}.crt ${certDir}/${host}.key
 
-        handle /jellyfin/* { reverse_proxy 127.0.0.1:8096 }
-        handle /prowlarr/* { reverse_proxy 127.0.0.1:9696 }
-        handle /sonarr/*   { reverse_proxy 127.0.0.1:8989 }
-        handle /radarr/*   { reverse_proxy 127.0.0.1:7878 }
+          handle /jellyfin/* { reverse_proxy 127.0.0.1:8096 }
+          handle /prowlarr/* { reverse_proxy 127.0.0.1:9696 }
+          handle /sonarr/*   { reverse_proxy 127.0.0.1:8989 }
+          handle /radarr/*   { reverse_proxy 127.0.0.1:7878 }
 
-        # qBittorrent has no URL-base support, so it owns the site root.
-        handle {
-          reverse_proxy 127.0.0.1:8080
-        }
-      '';
+          # qBittorrent has no URL-base support, so it owns the site root.
+          handle {
+            reverse_proxy 127.0.0.1:8080
+          }
+        '';
+      };
     };
   };
 

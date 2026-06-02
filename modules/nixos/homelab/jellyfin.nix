@@ -1,4 +1,4 @@
-{ ... }:
+_:
 
 # Jellyfin media server. Runs with primary group `media` for read access to the
 # NAS library (/mnt/nas/media). Add the library folders in the Jellyfin setup
