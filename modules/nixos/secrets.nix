@@ -18,6 +18,18 @@ lib.mkIf (secrets != null) {
         owner = "root";
         group = "root";
       };
+
+      # gluetun reads this as an env file (environmentFiles). The decrypted
+      # contents are a single line: WIREGUARD_PRIVATE_KEY=<key from ProtonVPN>.
+      # Add protonvpn-wireguard.age to the nix-secrets repo before rebuilding.
+      "protonvpn-wireguard" = {
+        symlink = false;
+        path = "/etc/nixos/secrets/protonvpn-wireguard";
+        file = "${secrets}/protonvpn-wireguard.age";
+        mode = "600";
+        owner = "root";
+        group = "root";
+      };
     };
   };
 }
