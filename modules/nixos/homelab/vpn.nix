@@ -28,17 +28,15 @@
 # pick via SERVER_COUNTRIES / FREE_ONLY.
 #
 # ── Free vs paid ───────────────────────────────────────────────────────────────
-# This host currently runs a FREE Proton account (active block below). Free tier:
-#   * only free servers authenticate the key  -> FREE_ONLY = "on"
-#   * no WireGuard port forwarding             -> VPN_PORT_FORWARDING = "off"
-#   * limited countries (US/NL/JP/… , varies)  -> SERVER_COUNTRIES = "United States"
-# Port forwarding being off means worse seeding/connectability (no inbound peers),
-# but downloads and outbound connections work fine.
+# This host runs a PAID Proton account (active block below). Paid tier:
+#   * any server authenticates the key   -> no FREE_ONLY filter
+#   * WireGuard port forwarding available -> VPN_PORT_FORWARDING = "on"
+#   * all countries available             -> SERVER_COUNTRIES = "Netherlands" (good P2P)
+# Port forwarding lets inbound peers reach you, which materially improves seeding
+# and connectability vs the old free tier.
 #
-# To switch to a PAID plan later: comment out the FREE block, uncomment the PAID
-# block, set the server location you want, redeploy, and (if you enable port
-# forwarding) wire qBittorrent's listening port to gluetun's forwarded port — see
-# the note at the bottom of the PAID block.
+# To revert to FREE later: comment out the PAID block, uncomment the FREE block,
+# and redeploy. (The FREE block is preserved below for reference.)
 #
 # Reference: https://github.com/qdm12/gluetun-wiki/blob/main/setup/providers/protonvpn.md
 let
@@ -63,54 +61,46 @@ in
       # Update if a regenerated config assigns a different address.
       WIREGUARD_ADDRESSES = "10.2.0.2/32";
 
-      # gluetun's built-in DNS-over-TLS (to Cloudflare, over the tunnel) is one of
-      # the first things to fail on a congested free server — it shows up as
-      # "lookup <host>: i/o timeout" in the healthcheck and triggers a reconnect
-      # loop. Turn DoT off so DNS uses the VPN's resolver instead. (On a paid plan
-      # the tunnel is stable enough to flip this back to "on" if you want DoT.)
-      DOT = "off";
+      # On paid the tunnel is stable, so we use gluetun's built-in DNS-over-TLS
+      # (to Cloudflare, over the tunnel). On the old free tier this had to be off
+      # because congested servers made DoT the first thing to fail (i/o-timeout
+      # reconnect loop). Flip back to "off" if you ever see DNS instability.
+      DOT = "on";
 
       # ─────────────────────────────────────────────────────────────────────────
-      # FREE tier (ACTIVE). Free Proton WireGuard keys only authenticate against
-      # free servers, so we must filter to them; otherwise gluetun picks a paid
-      # server, the handshake "completes" silently, and every request times out.
-      FREE_ONLY = "on";
-      VPN_PORT_FORWARDING = "off"; # not available on free
-      # Free servers are slow/oversubscribed; give the tunnel more grace before
-      # the healthcheck tears it down and reconnects. Too-aggressive restarts
-      # churn the connection and stop qBittorrent from holding peers/DHT.
-      HEALTH_VPN_DURATION_INITIAL = "30s";
-      # Free servers are concentrated in a few countries (the downloaded config
-      # was US-FREE). Keep this to a country that actually has free servers.
-      SERVER_COUNTRIES = "United States";
-      # ─────────────────────────────────────────────────────────────────────────
+      # PAID tier (ACTIVE). Any server authenticates the key, so no FREE_ONLY
+      # filter. Choose ONE location selector — country is simplest. NL has good
+      # P2P throughput and supports port forwarding.
+      SERVER_COUNTRIES = "Netherlands";
+      # SERVER_CITIES    = "Amsterdam";
+      # SERVER_HOSTNAMES = "node-nl-01.protonvpn.net"; # pin an exact server
 
-      # ── PAID tier (commented out — swap in when you upgrade) ──
-      # 1. Comment out the three FREE lines above (FREE_ONLY / VPN_PORT_FORWARDING
-      #    / SERVER_COUNTRIES).
-      # 2. Uncomment the block below and pick your exit location.
+      # Port forwarding: paid Proton supports it over WireGuard. gluetun requests
+      # a port and exposes it on its control server (:8000). Improves seeding
+      # because peers can reach you inbound.
+      VPN_PORT_FORWARDING = "on";
+      VPN_PORT_FORWARDING_PROVIDER = "protonvpn";
+      # gluetun writes the negotiated port here; useful for scripting qBittorrent.
+      VPN_PORT_FORWARDING_STATUS_FILE = "/tmp/gluetun/forwarded_port";
+      # ─────────────────────────────────────────────────────────────────────────
       #
-      # # Use any server (drop FREE_ONLY entirely on paid).
-      # # Choose ONE location selector — country is simplest:
-      # SERVER_COUNTRIES = "Netherlands";   # e.g. NL for good P2P + PF
-      # # SERVER_CITIES   = "Amsterdam";
-      # # SERVER_HOSTNAMES = "node-nl-01.protonvpn.net"; # pin an exact server
+      # NOTE: the forwarded port is dynamic, so qBittorrent's "listening port"
+      # must be set to whatever gluetun negotiated, or inbound peers won't reach
+      # you. Options:
+      #   - read /tmp/gluetun/forwarded_port and set it in qBittorrent manually, or
+      #   - add a small sidecar/script that polls gluetun's control API
+      #     (http://127.0.0.1:8000/v1/openvpn/portforwarded) and pushes the port
+      #     into qBittorrent via its WebUI API. (Left as a follow-up.)
+
+      # ── FREE tier (commented out — swap back if you ever downgrade) ──
+      # 1. Comment out the PAID lines above (SERVER_COUNTRIES / the three
+      #    VPN_PORT_FORWARDING* lines), and set DOT = "off".
+      # 2. Uncomment the block below.
       #
-      # # Port forwarding: paid Proton supports it over WireGuard. gluetun will
-      # # request a port and expose it on its control server (:8000). This greatly
-      # # improves seeding because peers can reach you inbound.
-      # VPN_PORT_FORWARDING = "on";
-      # VPN_PORT_FORWARDING_PROVIDER = "protonvpn";
-      # # gluetun writes the negotiated port here; useful for scripting qBittorrent.
-      # VPN_PORT_FORWARDING_STATUS_FILE = "/tmp/gluetun/forwarded_port";
-      #
-      # # NOTE: the forwarded port is dynamic, so qBittorrent's "listening port"
-      # # must be set to whatever gluetun negotiated, or inbound peers won't reach
-      # # you. Options once on paid:
-      # #   - read /tmp/gluetun/forwarded_port and set it in qBittorrent manually, or
-      # #   - add a small sidecar/script that polls gluetun's control API
-      # #     (http://127.0.0.1:8000/v1/openvpn/portforwarded) and pushes the port
-      # #     into qBittorrent via its WebUI API. (Left as a follow-up.)
+      # FREE_ONLY = "on";                      # free keys only auth on free servers
+      # VPN_PORT_FORWARDING = "off";           # not available on free
+      # HEALTH_VPN_DURATION_INITIAL = "30s";   # grace for slow/oversubscribed servers
+      # SERVER_COUNTRIES = "United States";    # free servers cluster in a few countries
 
       TZ = config.time.timeZone;
     };
@@ -122,7 +112,12 @@ in
     # localhost so only the Caddy reverse proxy can reach it. On PAID with port
     # forwarding you may also want to publish gluetun's control server to read the
     # forwarded port, e.g. add "127.0.0.1:8000:8000/tcp".
-    ports = [ "127.0.0.1:${toString qbWebUiPort}:${toString qbWebUiPort}" ];
+    ports = [
+      "127.0.0.1:${toString qbWebUiPort}:${toString qbWebUiPort}"
+      # gluetun control server — read the negotiated forwarded port via
+      # `curl http://127.0.0.1:8000/v1/openvpn/portforwarded`.
+      "127.0.0.1:8000:8000/tcp"
+    ];
 
     extraOptions = [
       # WireGuard needs NET_ADMIN to bring up the wg interface, and the tun device
