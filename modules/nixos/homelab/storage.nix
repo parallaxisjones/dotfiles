@@ -20,5 +20,9 @@ _:
     "d /var/lib/torrents/incomplete 2775 qbittorrent media -"
     "d /var/lib/torrents/complete   2775 qbittorrent media -"
     "d /var/lib/qbittorrent         0750 qbittorrent media -"
+
+    "d /var/lib/usenet              2775 sabnzbd     media -"
+    "d /var/lib/usenet/incomplete   2775 sabnzbd     media -"
+    "d /var/lib/usenet/complete     2775 sabnzbd     media -"
   ];
 }
