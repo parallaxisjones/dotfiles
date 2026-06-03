@@ -63,12 +63,23 @@ in
       # Update if a regenerated config assigns a different address.
       WIREGUARD_ADDRESSES = "10.2.0.2/32";
 
+      # gluetun's built-in DNS-over-TLS (to Cloudflare, over the tunnel) is one of
+      # the first things to fail on a congested free server — it shows up as
+      # "lookup <host>: i/o timeout" in the healthcheck and triggers a reconnect
+      # loop. Turn DoT off so DNS uses the VPN's resolver instead. (On a paid plan
+      # the tunnel is stable enough to flip this back to "on" if you want DoT.)
+      DOT = "off";
+
       # ─────────────────────────────────────────────────────────────────────────
       # FREE tier (ACTIVE). Free Proton WireGuard keys only authenticate against
       # free servers, so we must filter to them; otherwise gluetun picks a paid
       # server, the handshake "completes" silently, and every request times out.
       FREE_ONLY = "on";
       VPN_PORT_FORWARDING = "off"; # not available on free
+      # Free servers are slow/oversubscribed; give the tunnel more grace before
+      # the healthcheck tears it down and reconnects. Too-aggressive restarts
+      # churn the connection and stop qBittorrent from holding peers/DHT.
+      HEALTH_VPN_DURATION_INITIAL = "30s";
       # Free servers are concentrated in a few countries (the downloaded config
       # was US-FREE). Keep this to a country that actually has free servers.
       SERVER_COUNTRIES = "United States";
