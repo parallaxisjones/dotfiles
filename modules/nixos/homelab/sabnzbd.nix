@@ -25,6 +25,10 @@ _:
       url_base = "/sabnzbd";
       download_dir = "/var/lib/usenet/incomplete";
       complete_dir = "/var/lib/usenet/complete";
+      # SABnzbd rejects requests whose Host header isn't whitelisted (CSRF/DNS
+      # hijack protection). The tailnet FQDN must be explicit here because the
+      # auto-populated default only covers the bare machine hostname.
+      host_whitelist = "nixos.tail9fed5f.ts.net";
     };
   };
 }
