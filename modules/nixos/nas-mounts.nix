@@ -50,8 +50,10 @@ lib.mkIf (config.age.secrets ? "smb-credentials") {
     "/mnt/nas/media" =
       let
         userUid = toString config.users.users.${user}.uid;
-        primaryGroup = config.users.users.${user}.group or user;
-        userGid = toString config.users.groups.${primaryGroup}.gid;
+        # Force the shared `media` group (defined in modules/nixos/homelab) so the
+        # *arr services and Jellyfin — which run with primary group `media` — can
+        # read and write the media library over CIFS.
+        mediaGid = toString config.users.groups.media.gid;
       in
       {
         device = "//nasology.tail9fed5f.ts.net/Media";
@@ -61,7 +63,7 @@ lib.mkIf (config.age.secrets ? "smb-credentials") {
           "_netdev"
           "credentials=${config.age.secrets.smb-credentials.path}"
           "uid=${userUid}"
-          "gid=${userGid}"
+          "gid=${mediaGid}"
           "file_mode=0664"
           "dir_mode=0775"
         ];

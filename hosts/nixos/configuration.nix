@@ -17,6 +17,8 @@
       ../../modules/nixos/secrets.nix
       # NAS SMB/CIFS mounts
       ../../modules/nixos/nas-mounts.nix
+      # Homelab service stack (torrent + *arr + Jellyfin + Caddy reverse proxy)
+      ../../modules/nixos/homelab
     ];
 
   # Bootloader.
