@@ -89,7 +89,7 @@ in
       # you. Options:
       #   - read /tmp/gluetun/forwarded_port and set it in qBittorrent manually, or
       #   - add a small sidecar/script that polls gluetun's control API
-      #     (http://127.0.0.1:8000/v1/openvpn/portforwarded) and pushes the port
+      #     (http://127.0.0.1:8000/v1/portforward) and pushes the port
       #     into qBittorrent via its WebUI API. (Left as a follow-up.)
 
       # ── FREE tier (commented out — swap back if you ever downgrade) ──
@@ -115,7 +115,7 @@ in
     ports = [
       "127.0.0.1:${toString qbWebUiPort}:${toString qbWebUiPort}"
       # gluetun control server — read the negotiated forwarded port via
-      # `curl http://127.0.0.1:8000/v1/openvpn/portforwarded`.
+      # `curl http://127.0.0.1:8000/v1/portforward`.
       "127.0.0.1:8000:8000/tcp"
     ];
 
