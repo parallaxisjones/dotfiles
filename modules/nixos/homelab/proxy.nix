@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
 # Caddy reverse proxy fronting every service under a single tailnet hostname,
 # with real TLS certs issued for the tailnet name. Tailnet-only: nothing here is
