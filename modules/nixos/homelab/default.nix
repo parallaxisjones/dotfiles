@@ -11,6 +11,7 @@
     ./torrent.nix
     ./arr.nix
     ./jellyfin.nix
+    ./sabnzbd.nix
     ./proxy.nix
   ];
 

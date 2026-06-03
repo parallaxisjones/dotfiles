@@ -64,10 +64,11 @@ in
         extraConfig = ''
           tls ${certDir}/${host}.crt ${certDir}/${host}.key
 
-          handle /jellyfin/* { reverse_proxy 127.0.0.1:8096 }
+          handle /jellyfin/*  { reverse_proxy 127.0.0.1:8096 }
           handle /prowlarr/* { reverse_proxy 127.0.0.1:9696 }
           handle /sonarr/*   { reverse_proxy 127.0.0.1:8989 }
           handle /radarr/*   { reverse_proxy 127.0.0.1:7878 }
+          handle /sabnzbd/*  { reverse_proxy 127.0.0.1:9090 }
 
           # qBittorrent has no URL-base support, so it owns the site root.
           handle {
