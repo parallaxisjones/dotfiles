@@ -73,6 +73,11 @@ with pkgs; [
   # nodePackages.prettier      # desktop-dev
   # nodejs                     # desktop-dev
 
+  # Nix dev tools
+  just
+  statix
+  deadnix
+
   # Source code management, Git, GitHub tools
   gh
 
