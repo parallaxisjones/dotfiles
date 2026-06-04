@@ -68,6 +68,8 @@ in
     #   # add more dnsmasq configs here if needed
     # };
   };
+  home-manager.backupFileExtension = "backup";
+
   # Enable Home Manager
   # programs.home-manager.enable = true;
 
