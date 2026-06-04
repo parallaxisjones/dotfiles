@@ -1,7 +1,7 @@
 { user, ... }:
 
 # Homelab service stack: torrenting (gluetun + qBittorrent), the *arr
-# automation suite, a Jellyfin media server, and a Caddy reverse proxy that
+# automation suite, Jellyfin + Plex media servers, and a Caddy reverse proxy that
 # exposes everything privately over the tailnet. See docs/ and the plan for the
 # overall design; each concern lives in its own file below.
 {
@@ -11,6 +11,7 @@
     ./torrent.nix
     ./arr.nix
     ./jellyfin.nix
+    ./plex.nix
     ./sabnzbd.nix
     ./proxy.nix
   ];

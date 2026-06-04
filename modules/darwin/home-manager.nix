@@ -22,7 +22,7 @@ in
 
   homebrew = {
     enable = true;
-    brews = [ "rtk" "bastionzero/tap/zli" ];
+    brews = [ "rtk" "bastionzero/tap/zli" "nvm" ];
     casks = pkgs.callPackage ./casks.nix { };
   };
 
@@ -145,10 +145,6 @@ in
         programs = lib.mkMerge [
           (import ../shared/home-manager.nix { inherit config pkgs lib; })
           {
-            nvm = {
-              enable = true;
-              enableZshIntegration = true;
-            };
             agent-skills = {
               enable = true;
               sources.mine = {
