@@ -145,6 +145,10 @@ in
         programs = lib.mkMerge [
           (import ../shared/home-manager.nix { inherit config pkgs lib; })
           {
+            nvm = {
+              enable = true;
+              enableZshIntegration = true;
+            };
             agent-skills = {
               enable = true;
               sources.mine = {
