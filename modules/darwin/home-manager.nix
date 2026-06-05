@@ -22,7 +22,7 @@ in
 
   homebrew = {
     enable = true;
-    brews = [ "rtk" "bastionzero/tap/zli" ];
+    brews = [ "rtk" "bastionzero/tap/zli" "nvm" ];
     casks = pkgs.callPackage ./casks.nix { };
   };
 

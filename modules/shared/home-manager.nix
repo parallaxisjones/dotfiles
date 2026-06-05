@@ -64,6 +64,11 @@ in
       # nix clang-wrapper broke aws-lc-sys (missing dsymutil), and the append-based
       # CFLAGS/RUSTFLAGS exports duplicated on every shell re-source.
 
+      # NVM (installed via Homebrew on Darwin)
+      export NVM_DIR="$HOME/.nvm"
+      [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
+      [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
+
       # Use difftastic, syntax-aware diffing
       # alias diff=difft
 
