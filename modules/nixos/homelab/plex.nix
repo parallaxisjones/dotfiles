@@ -12,6 +12,12 @@ _:
     openFirewall = true;
   };
 
+  # The plex service user's home is /var/empty (not writable). Mesa/VAAPI tries
+  # to create $HOME/.cache for shader caching and fails with "Operation not
+  # permitted", causing VAAPI to crash-restart on every transcode. Redirect the
+  # cache to /var/lib/plex where plex already has write access.
+  systemd.services.plex.environment.XDG_CACHE_HOME = "/var/lib/plex/.cache";
+
   # ── Hardware (VAAPI) transcoding ──────────────────────────────────────────────
   # Same AMD Radeon (Polaris/GCN4) render node as the old Jellyfin setup.
   # `hardware.graphics.enable` installs Mesa/radeonsi which Plex's bundled ffmpeg

@@ -65,14 +65,6 @@ in
           tls ${certDir}/${host}.crt ${certDir}/${host}.key
 
           handle /jellyfin/*  { reverse_proxy 127.0.0.1:8096 }
-
-          # Plex: strip the /plex prefix before proxying so Plex sees its own paths.
-          # Set Settings → Remote Access → Custom server access URLs to
-          # https://nixos.tail9fed5f.ts.net/plex after initial setup.
-          handle /plex/*  {
-            uri strip_prefix /plex
-            reverse_proxy 127.0.0.1:32400
-          }
           handle /prowlarr/* { reverse_proxy 127.0.0.1:9696 }
           handle /sonarr/*   { reverse_proxy 127.0.0.1:8989 }
           handle /radarr/*   { reverse_proxy 127.0.0.1:7878 }
