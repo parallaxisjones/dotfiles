@@ -14,6 +14,7 @@
     ./plex.nix
     ./sabnzbd.nix
     ./proxy.nix
+    ./observability.nix
   ];
 
   users = {

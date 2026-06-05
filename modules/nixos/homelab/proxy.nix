@@ -68,6 +68,8 @@ in
           handle /prowlarr/* { reverse_proxy 127.0.0.1:9696 }
           handle /sonarr/*   { reverse_proxy 127.0.0.1:8989 }
           handle /radarr/*   { reverse_proxy 127.0.0.1:7878 }
+          handle /grafana/*  { reverse_proxy 127.0.0.1:3000 }
+          handle /tautulli/* { reverse_proxy 127.0.0.1:8181 }
           # Strip X-Forwarded-For so SABnzbd sees 127.0.0.1 and passes its
           # local-only access check. Tailscale IPs (100.x/CGNAT) are not in
           # SABnzbd's definition of local, so without this the request is denied.
