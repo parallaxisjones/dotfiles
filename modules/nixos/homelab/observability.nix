@@ -260,15 +260,24 @@
     openFirewall = false;
   };
 
-  # The NixOS module doesn't expose http_root, so patch ExecStart to add it.
-  # Without this, Tautulli serves at / and the /tautulli/* Caddy route gets 404s.
-  systemd.services.tautulli.serviceConfig.ExecStart = lib.mkForce (
-    "${pkgs.tautulli}/bin/tautulli"
-    + " --datadir /var/lib/plexpy"
-    + " --config /var/lib/plexpy/config.ini"
-    + " --port 8181"
-    + " --pidfile /var/lib/plexpy/tautulli.pid"
-    + " --nolaunch"
-    + " --http_root /tautulli"
-  );
+  # Tautulli has no CLI flag for http_root — it's config.ini only. This preStart
+  # script injects http_root = /tautulli before each startup so the /tautulli/*
+  # Caddy route works. The file is owned by the plexpy service user.
+  systemd.services.tautulli.serviceConfig.ExecStartPre =
+    let
+      script = pkgs.writeShellScript "tautulli-set-http-root" ''
+        cfg=/var/lib/plexpy/config.ini
+        if [ -f "$cfg" ]; then
+          if grep -q '^http_root' "$cfg"; then
+            ${pkgs.gnused}/bin/sed -i 's|^http_root =.*|http_root = /tautulli|' "$cfg"
+          else
+            ${pkgs.gnused}/bin/sed -i '/^\[General\]/a http_root = /tautulli' "$cfg"
+          fi
+        else
+          mkdir -p /var/lib/plexpy
+          printf '[General]\nhttp_root = /tautulli\n' > "$cfg"
+        fi
+      '';
+    in
+    "+${script}";  # '+' prefix runs as root so it can always write the config
 }
