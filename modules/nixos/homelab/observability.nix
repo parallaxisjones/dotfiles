@@ -174,45 +174,42 @@
     };
   };
 
-  # Promtail: ships journald logs → Loki
-  services.promtail = {
+  # Grafana Alloy: ships journald logs → Loki (replaces promtail, which was removed from NixOS).
+  # Config uses Alloy's River syntax written inline via pkgs.writeText.
+  services.alloy = {
     enable = true;
-    configuration = {
-      server = {
-        http_listen_port = 9080;
-        grpc_listen_port = 0;
-      };
+    configPath = pkgs.writeText "alloy.alloy" ''
+      loki.source.journal "journal" {
+        max_age       = "336h"
+        forward_to    = [loki.relabel.journal.receiver]
+        labels = {
+          "job"  = "systemd-journal",
+          "host" = "nixos",
+        }
+      }
 
-      positions.filename = "/var/lib/promtail/positions.yaml";
+      loki.relabel "journal" {
+        forward_to = [loki.write.local.receiver]
+        rule {
+          source_labels = ["__journal__systemd_unit"]
+          target_label  = "unit"
+        }
+        rule {
+          source_labels = ["__journal__hostname"]
+          target_label  = "hostname"
+        }
+        rule {
+          source_labels = ["__journal_priority_keyword"]
+          target_label  = "level"
+        }
+      }
 
-      clients = [{ url = "http://localhost:3100/loki/api/v1/push"; }];
-
-      scrape_configs = [{
-        job_name = "journal";
-        journal = {
-          # Don't backfill more than 14 days of logs on first start.
-          max_age = "336h";
-          labels = {
-            job = "systemd-journal";
-            host = "nixos";
-          };
-        };
-        relabel_configs = [
-          {
-            source_labels = [ "__journal__systemd_unit" ];
-            target_label = "unit";
-          }
-          {
-            source_labels = [ "__journal__hostname" ];
-            target_label = "hostname";
-          }
-          {
-            source_labels = [ "__journal_priority_keyword" ];
-            target_label = "level";
-          }
-        ];
-      }];
-    };
+      loki.write "local" {
+        endpoint {
+          url = "http://localhost:3100/loki/api/v1/push"
+        }
+      }
+    '';
   };
 
   # ── Grafana ───────────────────────────────────────────────────────────────────
