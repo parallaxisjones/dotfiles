@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 
 # Observability stack: Prometheus (metrics) + Loki (logs) + Grafana (UI) + Tautulli (Plex).
 #
@@ -259,4 +259,16 @@
     port = 8181;
     openFirewall = false;
   };
+
+  # The NixOS module doesn't expose http_root, so patch ExecStart to add it.
+  # Without this, Tautulli serves at / and the /tautulli/* Caddy route gets 404s.
+  systemd.services.tautulli.serviceConfig.ExecStart = lib.mkForce (
+    "${pkgs.tautulli}/bin/tautulli"
+    + " --datadir /var/lib/plexpy"
+    + " --config /var/lib/plexpy/config.ini"
+    + " --port 8181"
+    + " --pidfile /var/lib/plexpy/tautulli.pid"
+    + " --nolaunch"
+    + " --http_root /tautulli"
+  );
 }
