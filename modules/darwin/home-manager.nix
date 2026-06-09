@@ -54,7 +54,7 @@ in
       {
         home = {
           enableNixpkgsReleaseCheck = false;
-          sessionPath = [ "$HOME/.cargo/bin" ];
+          sessionPath = [ "$HOME/.cargo/bin" "$HOME/.local/bin" ];
           packages = basePackages ++ rustPackages;
           file = lib.mkMerge [
             sharedFiles
