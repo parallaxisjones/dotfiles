@@ -26,6 +26,9 @@ _:
   # "steam"
   "vlc"
 
+  # Screen Recording / Demos
+  "obs"
+
   # Productivity Tools
   "raycast"
   "asana"
