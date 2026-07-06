@@ -1,7 +1,7 @@
 # Change: Tabularis cask + nix-darwin/nixpkgs skew fixes
 
 - Date: 2026-07-06
-- PR / commit: PR TBD (changes currently in the working tree; last merged PR was #89)
+- PR / commit: [#90](https://github.com/parallaxisjones/dotfiles/pull/90)
 - Related ADRs: none
 
 ## What changed
