@@ -297,7 +297,8 @@
         "my-skills": "my-skills",
         "nix-homebrew": "nix-homebrew",
         "nixpkgs": "nixpkgs",
-        "secrets": "secrets"
+        "secrets": "secrets",
+        "tabularis-tap": "tabularis-tap"
       }
     },
     "rust-analyzer-src": {
@@ -345,6 +346,22 @@
       "original": {
         "owner": "nix-systems",
         "repo": "default",
+        "type": "github"
+      }
+    },
+    "tabularis-tap": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1782898960,
+        "narHash": "sha256-CocE/Fjmyes6xtf8zDofq3jLpI29v/BTuwCPJv8aVUU=",
+        "owner": "TabularisDB",
+        "repo": "homebrew-tabularis",
+        "rev": "042c2e23596998ac22c09fdbf46eca01ffb19d7b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "TabularisDB",
+        "repo": "homebrew-tabularis",
         "type": "github"
       }
     }

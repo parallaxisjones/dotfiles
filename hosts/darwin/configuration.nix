@@ -14,6 +14,13 @@ in
     ../../modules/darwin/claude-code-managed.nix
     ../../modules/shared
   ];
+
+  # Skip building nix-darwin's HTML manual / `darwin help`. The pinned nix-darwin
+  # (Apr 2025) renders docs via `nixos-render-docs ... --toc-depth`, a flag the
+  # current nixpkgs removed ("use --sidebar-depth instead"), which breaks the
+  # build. Disabling docs sidesteps the skew without bumping nix-darwin.
+  documentation.enable = false;
+
   nix = {
     package = pkgs.nix;
     settings = {
@@ -80,27 +87,6 @@ in
     # mcp-hub removed
   ];
 
-  # Ensure ~/.ssh/known_hosts is a writable regular file, not a symlink, to avoid SSH known_hosts update issues
-  system.activationScripts.fixKnownHosts = {
-    deps = [ ];
-    text = ''
-      USER_HOME="/Users/pjones"
-      KNOWN_HOSTS="$USER_HOME/.ssh/known_hosts"
-      mkdir -p "$USER_HOME/.ssh"
-      if [ -L "$KNOWN_HOSTS" ]; then
-        echo "Replacing symlinked known_hosts with a regular file"
-        rm -f "$KNOWN_HOSTS"
-        touch "$KNOWN_HOSTS"
-        chown pjones:staff "$KNOWN_HOSTS"
-        chmod 600 "$KNOWN_HOSTS"
-      elif [ ! -e "$KNOWN_HOSTS" ]; then
-        touch "$KNOWN_HOSTS"
-        chown pjones:staff "$KNOWN_HOSTS"
-        chmod 600 "$KNOWN_HOSTS"
-      fi
-    '';
-  };
-
   # nix-darwin manages nix-daemon automatically when nix is enabled
 
   # Provide the remote builders file referenced above
@@ -120,6 +106,35 @@ in
   system = {
     stateVersion = 4;
     primaryUser = "pjones";
+
+    # darwin-uninstaller bundles its own default system evaluation (with docs
+    # enabled) that re-introduces the broken manual into our closure, so it
+    # can't be reached by documentation.enable above. Drop the uninstaller tool
+    # too; if ever needed, run `nix run nix-darwin#darwin-uninstaller`.
+    tools.darwin-uninstaller.enable = false;
+
+    # Ensure ~/.ssh/known_hosts is a writable regular file, not a symlink, to
+    # avoid SSH known_hosts update issues.
+    activationScripts.fixKnownHosts = {
+      deps = [ ];
+      text = ''
+        USER_HOME="/Users/pjones"
+        KNOWN_HOSTS="$USER_HOME/.ssh/known_hosts"
+        mkdir -p "$USER_HOME/.ssh"
+        if [ -L "$KNOWN_HOSTS" ]; then
+          echo "Replacing symlinked known_hosts with a regular file"
+          rm -f "$KNOWN_HOSTS"
+          touch "$KNOWN_HOSTS"
+          chown pjones:staff "$KNOWN_HOSTS"
+          chmod 600 "$KNOWN_HOSTS"
+        elif [ ! -e "$KNOWN_HOSTS" ]; then
+          touch "$KNOWN_HOSTS"
+          chown pjones:staff "$KNOWN_HOSTS"
+          chmod 600 "$KNOWN_HOSTS"
+        fi
+      '';
+    };
+
     defaults = {
       dock = {
         autohide = true;

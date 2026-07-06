@@ -34,6 +34,10 @@
       url = "github:bastionzero/homebrew-tap";
       flake = false;
     };
+    tabularis-tap = {
+      url = "github:TabularisDB/homebrew-tabularis";
+      flake = false;
+    };
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -56,7 +60,7 @@
       url = "github:parallaxisjones/skills";
     };
   };
-  outputs = { self, darwin, nix-homebrew, homebrew-bundle, homebrew-core, homebrew-cask, bastionzero-tap, home-manager, nixpkgs, disko, fenix, ... } @inputs:
+  outputs = { self, darwin, nix-homebrew, homebrew-bundle, homebrew-core, homebrew-cask, bastionzero-tap, tabularis-tap, home-manager, nixpkgs, disko, fenix, ... } @inputs:
     let
       user = "parallaxis";
       workUser = "pjones";
@@ -209,6 +213,7 @@
                   "homebrew/homebrew-cask" = homebrew-cask;
                   "homebrew/homebrew-bundle" = homebrew-bundle;
                   "bastionzero/homebrew-tap" = bastionzero-tap;
+                  "TabularisDB/homebrew-tabularis" = tabularis-tap;
                 };
                 mutableTaps = false;
                 autoMigrate = true;
