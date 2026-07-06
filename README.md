@@ -45,6 +45,7 @@ See `docs/ROADMAP.md` for details and backlog.
 Apps are pre-wired scripts that run under `nix run .#<app>`. They are defined per system in `flake.nix`, and the repo provides implementations in `apps/<system>/`.
 
 Common examples:
+
 - On macOS:
   - `nix run .#build` — build the current Darwin config
   - `nix run .#build-switch` — build and activate Darwin config
@@ -55,6 +56,7 @@ Common examples:
   - `nix run .#install-with-secrets` — install flow with secrets provisioning
 
 Notes:
+
 - Apps are system-specific; the correct variant is selected by your machine’s architecture (e.g., `x86_64-linux`, `aarch64-linux`, `aarch64-darwin`).
 - Some scripts expect SSH forwarding for secrets or remote builders. See `docs/DEPLOYMENT.md` and `docs/REMOTE_BUILDERS.md`.
 
@@ -63,6 +65,7 @@ Notes:
 Use a beefy x86_64 NixOS builder to compile `aarch64-linux` and `x86_64-linux`, and offload from macOS M3.
 
 Quick setup:
+
 - On the builder (NixOS):
   - Enable ARM emulation if needed:
     ```nix
@@ -83,6 +86,7 @@ Quick setup:
     ```
 
 Verify:
+
 - List systems in this flake: `nix eval .#nixosConfigurations --apply builtins.attrNames`
 - Test remote build: `nix build .#nixosConfigurations.<host>.config.system.build.toplevel`
   (from macOS, the work should occur on `nixos`).
@@ -109,8 +113,10 @@ See `docs/REMOTE_BUILDERS.md` for details.
 
 ## Documentation
 
+- `CHANGELOG.md` – surface-level log of notable changes (dated, PR-referenced)
+- `docs/changes/` – deeper change notes: what changed and what caused it
 - `docs/ROADMAP.md` – phased plan and current state
 - `docs/HELIOS64.md` – RK3399/Helios64 checklist and install notes
 - `docs/REMOTE_BUILDERS.md` – x86 builder and macOS M3 flows
-- `docs/DEPLOYMENT.md` – deploy-rs and nixos-anywhere usage
+- `docs/DEPLOYMENT.md` – first install (nixos-anywhere, deploy-rs) + macOS Homebrew tap-trust step
 - `docs/BOOTSTRAP_KEYS.md` – bootstrap and key management guide
