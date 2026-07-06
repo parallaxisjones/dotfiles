@@ -38,4 +38,7 @@ _:
 
   # AI
   "diffusionbee"
+
+  # Databases
+  "tabularis"
 ]

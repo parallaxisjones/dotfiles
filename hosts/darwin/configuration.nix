@@ -14,6 +14,18 @@ in
     ../../modules/darwin/claude-code-managed.nix
     ../../modules/shared
   ];
+
+  # Skip building nix-darwin's HTML manual / `darwin help`. The pinned nix-darwin
+  # (Apr 2025) renders docs via `nixos-render-docs ... --toc-depth`, a flag the
+  # current nixpkgs removed ("use --sidebar-depth instead"), which breaks the
+  # build. Disabling docs sidesteps the skew without bumping nix-darwin.
+  documentation.enable = false;
+  # darwin-uninstaller bundles its own default system evaluation (with docs
+  # enabled) that re-introduces the broken manual into our closure, so it can't
+  # be reached by documentation.enable above. Drop the uninstaller tool too;
+  # if ever needed it can still be run via `nix run nix-darwin#darwin-uninstaller`.
+  system.tools.darwin-uninstaller.enable = false;
+
   nix = {
     package = pkgs.nix;
     settings = {
