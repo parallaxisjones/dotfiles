@@ -161,6 +161,25 @@ local plugins = {
     end,
   },
 
+  -- Git: staging/committing UI (Neogit) + diff & file-history viewer (Diffview)
+  {
+    "sindrets/diffview.nvim",
+    cmd = { "DiffviewOpen", "DiffviewClose", "DiffviewToggleFiles", "DiffviewFocusFiles", "DiffviewFileHistory" },
+    dependencies = { "nvim-lua/plenary.nvim" },
+    opts = {},
+  },
+
+  {
+    "NeogitOrg/neogit",
+    cmd = "Neogit",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "sindrets/diffview.nvim", -- richer diffs inside Neogit
+      "nvim-telescope/telescope.nvim", -- telescope-backed pickers
+    },
+    opts = {},
+  },
+
   {
     "obsidian-nvim/obsidian.nvim",
     lazy = true,

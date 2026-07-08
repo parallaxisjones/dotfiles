@@ -10,6 +10,12 @@ changed and what caused it_ live in [`docs/changes/`](docs/changes/).
 
 ## [Unreleased]
 
+### Added
+
+- Neovim: `neogit` (git staging/commit UI) and `diffview.nvim` (diff + file-history viewer) plugins, lazy-loaded on command, in `modules/shared/config/nvim/lua/custom/plugins.lua`. Neogit is wired to telescope + diffview. New leader bindings in `custom/mappings.lua`: `<leader>gd` → `:DiffviewOpen`, `<leader>gh` → `:DiffviewFileHistory %`, `<leader>gs` → `:Neogit`.
+
+→ details: [`docs/changes/2026-07-08-neovim-neogit-diffview.md`](docs/changes/2026-07-08-neovim-neogit-diffview.md)
+
 ## 2026-07-06
 
 ### Added
