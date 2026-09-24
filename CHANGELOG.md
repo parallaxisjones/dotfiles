@@ -10,6 +10,10 @@ changed and what caused it_ live in [`docs/changes/`](docs/changes/).
 
 ## [Unreleased]
 
+### Fixed
+
+- Flake evaluation with updated nixpkgs: removed the archived HexChat package and retired the unsupported Intel macOS target from flake outputs, CI, and app helpers. See [change notes](docs/changes/2026-09-24-fix-flake-evaluation.md).
+
 ### Added
 
 - Neovim: `neogit` (git staging/commit UI) and `diffview.nvim` (diff + file-history viewer) plugins, lazy-loaded on command, in `modules/shared/config/nvim/lua/custom/plugins.lua`. Neogit is wired to telescope + diffview. New leader bindings in `custom/mappings.lua`: `<leader>gd` → `:DiffviewOpen`, `<leader>gh` → `:DiffviewFileHistory %`, `<leader>gs` → `:Neogit`.
