@@ -20,7 +20,6 @@ with pkgs; [
   galculator
   pavucontrol
   discord
-  hexchat
   fractal
   direnv
   rofi

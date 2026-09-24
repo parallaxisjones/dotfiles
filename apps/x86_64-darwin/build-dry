@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-set -euo pipefail
-
-exec darwin-rebuild build --flake .#x86_64-darwin "$@"
-
-

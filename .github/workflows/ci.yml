@@ -83,7 +83,6 @@ jobs:
           # Override secrets input with empty directory since CI can't access private repo
           mkdir -p /tmp/empty-secrets
           nix --extra-experimental-features 'nix-command flakes' eval .#darwinConfigurations.aarch64-darwin.system --override-input secrets path:/tmp/empty-secrets
-          nix --extra-experimental-features 'nix-command flakes' eval .#darwinConfigurations.x86_64-darwin.system --override-input secrets path:/tmp/empty-secrets
           nix --extra-experimental-features 'nix-command flakes' eval .#nixosConfigurations.x86_64-linux.config.system.build.toplevel --override-input secrets path:/tmp/empty-secrets
           nix --extra-experimental-features 'nix-command flakes' eval .#nixosConfigurations.aarch64-linux.config.system.build.toplevel --override-input secrets path:/tmp/empty-secrets
           nix --extra-experimental-features 'nix-command flakes' eval .#nixosConfigurations.helios64.config.system.build.toplevel --override-input secrets path:/tmp/empty-secrets

@@ -75,7 +75,7 @@ Deliverables:
 ### Backlog · CI/CD and GitHub Actions
 - Add `nixpkgs-fmt --check` step; fail PRs on formatting issues. — Done
 - Add Cachix push on main builds; leverage binary cache across hosts. — Added job (needs secret)
-- Add matrix eval/build for `x86_64-linux`, `aarch64-linux`, `aarch64-darwin`, `x86_64-darwin`.
+- Add matrix eval/build for `x86_64-linux`, `aarch64-linux`, `aarch64-darwin`.
 - Add flake inputs update workflow (scheduled) with PR auto-label `automerge`.
 - Attach `nix flake show` and `nix flake check` summaries to PR. — Done
 

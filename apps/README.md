@@ -1,6 +1,6 @@
 # Apps
 
-These are flake apps: runnable commands exposed by `flake.nix` and dispatched per system (e.g., `x86_64-linux`, `aarch64-linux`, `aarch64-darwin`, `x86_64-darwin`). They wrap common actions so you don’t need to remember long commands.
+These are flake apps: runnable commands exposed by `flake.nix` and dispatched per system (`x86_64-linux`, `aarch64-linux`, `aarch64-darwin`). They wrap common actions so you don’t need to remember long commands.
 
 Run them with:
 ```

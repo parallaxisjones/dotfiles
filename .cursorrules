@@ -46,7 +46,7 @@
 - Dev shells:
   - `nix develop` (default)
   - `nix develop .#gleam` / `.#elixir` / `.#zig` (see `devShells`)
-- macOS (aarch64-darwin or x86_64-darwin) builds:
+- macOS (aarch64-darwin) builds:
   - `nix run .#build-switch` (build then switch via nix-darwin)
   - `nix run .#build` (build only)
   - `nix run .#rollback`
