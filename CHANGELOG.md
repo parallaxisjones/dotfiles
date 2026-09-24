@@ -12,6 +12,8 @@ changed and what caused it_ live in [`docs/changes/`](docs/changes/).
 
 ### Fixed
 
+- Darwin builds: removed the stale 1Password hash override and made build helpers stop on errors rather than reporting a successful switch after a failed build. See [change notes](docs/changes/2026-09-24-darwin-build-failures.md).
+
 - Flake evaluation with updated nixpkgs: removed the archived HexChat package and retired the unsupported Intel macOS target from flake outputs, CI, and app helpers. See [change notes](docs/changes/2026-09-24-fix-flake-evaluation.md).
 
 ### Added
