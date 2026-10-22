@@ -23,7 +23,7 @@ jobs:
 
       - name: Update flake.lock and open PR
         id: update
-        uses: DeterminateSystems/update-flake-lock@v28
+        uses: DeterminateSystems/update-flake-lock@v29
         with:
           # Use a fine-grained PAT (Contents RW + Pull requests RW), NOT GITHUB_TOKEN:
           # PRs opened by GITHUB_TOKEN do not trigger the pull_request CI, so lint-eval
